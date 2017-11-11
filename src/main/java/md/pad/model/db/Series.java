@@ -1,22 +1,23 @@
 package md.pad.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import md.pad.model.db.abs.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name = "SERIES")
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Series extends AbstractEntity
 {
     private String name;
@@ -25,6 +26,7 @@ public class Series extends AbstractEntity
 
     private Integer ord;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "season_id")
     private Season season;
