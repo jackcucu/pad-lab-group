@@ -32,9 +32,9 @@ public class SerialController
     }
 
     @GetMapping(value = "/getAll")
-    public @ResponseBody List<Serial> getAllSerials(@PageableDefault final Pageable page)
+    public @ResponseBody List<Serial> getAllSerials(@RequestParam(required = false) final String search, @PageableDefault final Pageable page)
     {
-        return serialService.getAll(page).getContent();
+        return serialService.getAll(search, page).getContent();
     }
 
     @PostMapping(value = "/add", produces = APPLICATION_JSON_VALUE)
