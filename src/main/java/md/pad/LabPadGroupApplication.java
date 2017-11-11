@@ -20,26 +20,11 @@ import java.util.List;
         basePackageClasses = {LabPadGroupApplication.class, Jsr310JpaConverters.class}
 )
 @SpringBootApplication
-public class LabPadGroupApplication implements CommandLineRunner
+public class LabPadGroupApplication
 {
-
-    @Autowired
-    private SeasonService seasonService;
-
-    @Autowired
-    private SeriesService seriesService;
-
-    @Autowired
-    private SerialService serialService;
 
     public static void main(final String[] args)
     {
         SpringApplication.run(LabPadGroupApplication.class, args);
-    }
-
-    @Override public void run(final String... strings) throws Exception
-    {
-        final List<Serial> all = serialService.getAll();
-        System.out.println("asda");
     }
 }
