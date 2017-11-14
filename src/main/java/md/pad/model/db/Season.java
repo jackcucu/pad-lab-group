@@ -15,7 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -29,7 +29,7 @@ public class Season extends AbstractEntity
     private Integer season;
 
     @Column(name = "release_date")
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
 
     private String description;
 
