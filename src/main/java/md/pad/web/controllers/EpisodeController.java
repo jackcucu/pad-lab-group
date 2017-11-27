@@ -2,8 +2,10 @@ package md.pad.web.controllers;
 
 import md.pad.exceptions.SerialException;
 import md.pad.model.db.Episode;
+import md.pad.model.db.Season;
 import md.pad.resouce.EpisodeResource;
 import md.pad.service.EpisodeService;
+import md.pad.service.SeasonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +35,9 @@ public class EpisodeController
 {
     @Autowired
     private EpisodeService episodeService;
+
+    @Autowired
+    private SeasonService seasonService;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EpisodeResource> get(@PathVariable final Integer serialId,
@@ -64,13 +70,18 @@ public class EpisodeController
     @PostMapping(value = "/add")
     public ResponseEntity<EpisodeResource> addSerial(@PathVariable final Integer serialId,
                                                      @PathVariable final Integer seasonId,
-                                                     @RequestBody final Episode episode)
+                                                     @RequestBody @Validated final Episode episode) throws Exception
     {
+        final Season season = seasonService.getSeasonForSerial(serialId, seasonId)
+                .orElseThrow(() -> new SerialException("Serial or Season Not Found"));
+
+        episode.setSeason(season);
+
         episodeService.add(episode);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
-                .path("get")
-                .buildAndExpand(episode.getId())
+                .path("")
+                .buildAndExpand(serialId, seasonId, episode.getId())
                 .toUri();
 
         return ResponseEntity.created(uri).body(new EpisodeResource(episode));

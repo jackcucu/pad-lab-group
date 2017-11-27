@@ -2,8 +2,10 @@ package md.pad.web.controllers;
 
 import md.pad.exceptions.SerialException;
 import md.pad.model.db.Season;
+import md.pad.model.db.Serial;
 import md.pad.resouce.SeasonResource;
 import md.pad.service.SeasonService;
+import md.pad.service.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +33,9 @@ public class SeasonController
 {
     @Autowired
     private SeasonService seasonService;
+
+    @Autowired
+    private SerialService serialService;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SeasonResource> get(@PathVariable final Integer serialId,
@@ -59,13 +65,18 @@ public class SeasonController
 
     @PostMapping(value = "/add")
     public ResponseEntity<SeasonResource> addSerial(@PathVariable final Integer serialId,
-                                                     @RequestBody final Season season)
+                                                    @RequestBody @Validated final Season season) throws Exception
     {
+        final Serial serial = serialService.getById(serialId)
+                .orElseThrow(() -> new SerialException("Serial Not Found"));
+
+        season.setSerial(serial);
+
         seasonService.add(season);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("")
-                .buildAndExpand(season.getId())
+                .buildAndExpand(serialId, season.getId())
                 .toUri();
 
         return ResponseEntity.created(uri).body(new SeasonResource(season));
@@ -75,7 +86,7 @@ public class SeasonController
     public ResponseEntity<?> delete(@PathVariable final Integer serialId,
                                     @PathVariable final Integer seasonId) throws SerialException
     {
-        return seasonService.getSeasonForSerial(seasonId, seasonId)
+        return seasonService.getSeasonForSerial(serialId, seasonId)
                 .map(it -> {
                     seasonService.delete(seasonId);
                     return ResponseEntity.noContent().build();
