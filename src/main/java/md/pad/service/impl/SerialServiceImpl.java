@@ -13,6 +13,12 @@ import java.util.Optional;
 public class SerialServiceImpl extends EntityServiceImpl<Serial, SerialRepository>
         implements SerialService
 {
+    @Override
+    public Optional<Serial> getById(final Integer id)
+    {
+        return repository.findById(id);
+    }
+
     @Transactional
     @Override
     public Optional<Serial> getByName(final String name)

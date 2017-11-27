@@ -1,5 +1,6 @@
 package md.pad.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class Serial extends AbstractEntity
     @Column(unique = true)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "serial", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Season> seasons;
 }

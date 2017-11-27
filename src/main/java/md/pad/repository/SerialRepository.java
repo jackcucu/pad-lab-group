@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface SerialRepository extends JpaRepository<Serial, Integer>, JpaSpecificationExecutor<Serial>
 {
+    Optional<Serial> findById(Integer id);
+
     Optional<Serial> findByName(String name);
 
     void deleteByName(String name);

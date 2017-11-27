@@ -1,6 +1,5 @@
 package md.pad.service.abs;
 
-import md.pad.model.db.Serial;
 import md.pad.model.db.abs.AbstractEntity;
 import md.pad.query.GenericSpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.persistence.criteria.Predicate;
-import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,43 +19,51 @@ public abstract class EntityServiceImpl<E extends AbstractEntity, R extends JpaR
     @Autowired
     protected R repository;
 
+    @Transactional
     @Override
     public void add(final E entity)
     {
         repository.save(entity);
     }
 
+    @Transactional
     @Override
     public void edit(final E entity)
     {
         repository.save(entity);
     }
 
+    @Transactional
     @Override
     public void delete(final Integer id)
     {
         repository.delete(id);
     }
 
+    @Transactional
     @Override
     public void deleteAll()
     {
         repository.deleteAll();
     }
 
+    @Transactional
     @Override
     public E get(final Integer id)
     {
         return repository.getOne(id);
     }
 
+    @Transactional
     @Override
     public List<E> getAll()
     {
         return repository.findAll();
     }
 
-    @Override public List<E> getAll(final String query)
+    @Transactional
+    @Override
+    public List<E> getAll(final String query)
     {
         final String search = Optional.ofNullable(query).orElse("");
 
@@ -66,7 +72,9 @@ public abstract class EntityServiceImpl<E extends AbstractEntity, R extends JpaR
         return repository.findAll(specification);
     }
 
-    @Override public Page<E> getAll(final String query, final Pageable pageable)
+    @Transactional
+    @Override
+    public Page<E> getAll(final String query, final Pageable pageable)
     {
         final String search = Optional.ofNullable(query).orElse("");
 
@@ -75,12 +83,14 @@ public abstract class EntityServiceImpl<E extends AbstractEntity, R extends JpaR
         return repository.findAll(specification, pageable);
     }
 
+    @Transactional
     @Override
     public Page<E> getAll(final Pageable page)
     {
         return repository.findAll(page);
     }
 
+    @Transactional
     @Override
     public Long getCount()
     {

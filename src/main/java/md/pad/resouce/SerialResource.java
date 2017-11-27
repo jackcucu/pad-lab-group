@@ -3,7 +3,9 @@ package md.pad.resouce;
 import lombok.Getter;
 import md.pad.exceptions.SerialException;
 import md.pad.model.db.Serial;
+import md.pad.web.controllers.SeasonController;
 import md.pad.web.controllers.SerialController;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -17,10 +19,16 @@ public class SerialResource extends ResourceSupport
     public SerialResource(final Serial serial)
     {
         this.serial = serial;
-        add(linkTo(SerialController.class).withRel("api/serials"));
+
         try
         {
-            add(linkTo(methodOn(SerialController.class).getSerial(serial.getName())).withSelfRel());
+            add(linkTo(methodOn(SerialController.class).get(serial.getId())).withSelfRel());
+
+            add(linkTo(SerialController.class).withRel("serials"));
+
+            final Link seasons = linkTo(methodOn(SeasonController.class).getAll(serial.getId(), "", null))
+                    .withRel("seasons");
+            add(seasons);
         }
         catch (SerialException e)
         {
