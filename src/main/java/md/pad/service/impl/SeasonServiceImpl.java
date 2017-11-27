@@ -27,10 +27,12 @@ public class SeasonServiceImpl extends EntityServiceImpl<Season, SeasonRepositor
     @Override
     public Page<Season> getSeasonsForSerial(final Integer serialId, final String query, final Pageable pageable)
     {
+        final long count = getAll().stream().filter(it -> it.getSerial().getId().equals(serialId)).count();
+
         final List<Season> collect = getAll(query, pageable).getContent().stream()
                 .filter(it -> it.getSerial().getId().equals(serialId))
                 .collect(toList());
 
-        return new PageImpl<>(collect, pageable, collect.size());
+        return new PageImpl<>(collect, pageable, count);
     }
 }
