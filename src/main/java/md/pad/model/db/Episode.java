@@ -1,9 +1,9 @@
 package md.pad.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import md.pad.model.db.abs.AbstractEntity;
 
@@ -15,8 +15,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "EPISODE")
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Episode extends AbstractEntity
 {

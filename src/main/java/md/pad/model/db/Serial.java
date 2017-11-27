@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import md.pad.model.db.abs.AbstractEntity;
 
 import javax.persistence.CascadeType;
@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "SERIAL")
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Serial extends AbstractEntity
 {
