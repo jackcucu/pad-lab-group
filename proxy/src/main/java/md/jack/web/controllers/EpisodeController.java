@@ -37,7 +37,7 @@ public class EpisodeController
                                                @PathVariable final Integer seasonId,
                                                @PathVariable final Integer id)
     {
-        final EpisodeDto episode = episodeAccessor.get(serialId, seasonId, id).getBody();
+        final EpisodeDto episode = episodeAccessor.get(serialId, seasonId, id);
 
         return ResponseEntity.ok(new EpisodeResource(episode));
     }
@@ -48,7 +48,7 @@ public class EpisodeController
                                                                   @RequestParam(required = false) final String search,
                                                                   @PageableDefault final Pageable page)
     {
-        final Page<EpisodeDto> all = episodeAccessor.getAll(serialId, seasonId, search, page).getBody();
+        final Page<EpisodeDto> all = episodeAccessor.getAll(serialId, seasonId, search, page);
 
         final List<EpisodeResource> serials = all
                 .map(EpisodeResource::new)
@@ -65,7 +65,7 @@ public class EpisodeController
                                                       @PathVariable final Integer seasonId,
                                                       @RequestBody @Validated final EpisodeDto episode) throws Exception
     {
-        final EpisodeDto episodeDto = episodeAccessor.addEpisode(serialId, seasonId, episode).getBody();
+        final EpisodeDto episodeDto = episodeAccessor.addEpisode(serialId, seasonId, episode);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("")

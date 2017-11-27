@@ -34,7 +34,7 @@ public class SeasonController
     public ResponseEntity<SeasonResource> get(@PathVariable final Integer serialId,
                                               @PathVariable final Integer id)
     {
-        final SeasonDto season = seasonAccessor.get(serialId, id).getBody();
+        final SeasonDto season = seasonAccessor.get(serialId, id);
 
         return ResponseEntity.ok(new SeasonResource(season));
     }
@@ -44,7 +44,7 @@ public class SeasonController
                                                                  @RequestParam(required = false) final String search,
                                                                  @PageableDefault final Pageable page)
     {
-        final Page<SeasonDto> all = seasonAccessor.getAll(serialId, search, page).getBody();
+        final Page<SeasonDto> all = seasonAccessor.getAll(serialId, search, page);
 
         final List<SeasonResource> seasons = all
                 .map(SeasonResource::new)
@@ -60,7 +60,7 @@ public class SeasonController
     public ResponseEntity<SeasonResource> addSeason(@PathVariable final Integer serialId,
                                                     @RequestBody @Validated final SeasonDto season) throws Exception
     {
-        final SeasonDto seasonDto = seasonAccessor.addSeason(serialId, season).getBody();
+        final SeasonDto seasonDto = seasonAccessor.addSeason(serialId, season);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("")

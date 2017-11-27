@@ -36,7 +36,7 @@ public class SerialController
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SerialResource> get(@PathVariable final Integer id)
     {
-        final SerialDto serial = serialAccessor.get(id).getBody();
+        final SerialDto serial = serialAccessor.get(id);
 
         return ResponseEntity.ok(new SerialResource(serial));
     }
@@ -45,7 +45,7 @@ public class SerialController
     public ResponseEntity<PagedResources<SerialResource>> getAll(@RequestParam(required = false) final String search,
                                                                  @PageableDefault final Pageable page)
     {
-        final Page<SerialDto> all = serialAccessor.getAll(search, page).getBody();
+        final Page<SerialDto> all = serialAccessor.getAll(search, page);
 
         final List<SerialResource> serials = all
                 .map(SerialResource::new)
@@ -61,11 +61,11 @@ public class SerialController
     @PostMapping(value = "/add")
     public ResponseEntity<SerialResource> addSerial(@RequestBody @Validated final SerialDto serial)
     {
-        serialAccessor.addSerial(serial);
+        final SerialDto serialDto = serialAccessor.addSerial(serial);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("get")
-                .buildAndExpand(serial.getName())
+                .buildAndExpand(serialDto.getName())
                 .toUri();
 
         return ResponseEntity.created(uri).body(new SerialResource(serial));
