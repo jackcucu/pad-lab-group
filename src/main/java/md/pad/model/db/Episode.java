@@ -13,12 +13,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "SERIES")
+@Table(name = "EPISODE")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Series extends AbstractEntity
+public class Episode extends AbstractEntity
 {
     private String name;
 
