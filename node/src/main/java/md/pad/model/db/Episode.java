@@ -1,6 +1,5 @@
 package md.pad.model.db;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,7 +38,6 @@ public class Episode extends AbstractEntity
     @Column(unique = true)
     private Integer ord;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "season_id")
     private Season season;

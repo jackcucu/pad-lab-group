@@ -1,6 +1,8 @@
 package md.jack.web.controllers;
 
+import md.jack.GenericException;
 import md.jack.accessor.SeasonAccessor;
+import md.jack.dto.Dto;
 import md.jack.dto.SeasonDto;
 import md.jack.resouce.SeasonResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +27,29 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/serial/{serialId}/season")
-public class SeasonController
+public class SeasonController extends AbstractController
 {
     @Autowired
     private SeasonAccessor seasonAccessor;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<SeasonResource> get(@PathVariable final Integer serialId,
-                                              @PathVariable final Integer id)
+                                              @PathVariable final Integer id) throws GenericException
     {
-        final SeasonDto season = seasonAccessor.get(serialId, id);
+        final Dto response = getResponse(seasonAccessor.get(serialId, id));
+
+        final SeasonDto season = getSeasonDto(response);
 
         return ResponseEntity.ok(new SeasonResource(season));
     }
 
+
     @GetMapping
     public ResponseEntity<PagedResources<SeasonResource>> getAll(@PathVariable final Integer serialId,
                                                                  @RequestParam(required = false) final String search,
-                                                                 @PageableDefault final Pageable page)
+                                                                 @PageableDefault final Pageable page) throws GenericException
     {
-        final Page<SeasonDto> all = seasonAccessor.getAll(serialId, search, page);
+        final Page<SeasonDto> all = (Page<SeasonDto>) getResponse(seasonAccessor.getAll(serialId, search, page));
 
         final List<SeasonResource> seasons = all
                 .map(SeasonResource::new)
@@ -58,9 +63,11 @@ public class SeasonController
 
     @PostMapping(value = "/add")
     public ResponseEntity<SeasonResource> addSeason(@PathVariable final Integer serialId,
-                                                    @RequestBody @Validated final SeasonDto season) throws Exception
+                                                    @RequestBody @Validated final SeasonDto season) throws GenericException
     {
-        final SeasonDto seasonDto = seasonAccessor.addSeason(serialId, season);
+        final Dto response = getResponse(seasonAccessor.addSeason(serialId, season));
+
+        final SeasonDto seasonDto = getSeasonDto(response);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("")
@@ -72,10 +79,21 @@ public class SeasonController
 
     @DeleteMapping(value = "/delete")
     public ResponseEntity<?> delete(@PathVariable final Integer serialId,
-                                    @PathVariable final Integer id)
+                                    @PathVariable final Integer id) throws GenericException
     {
-        seasonAccessor.delete(serialId, id);
+        getResponse(seasonAccessor.delete(serialId, id));
 
         return ResponseEntity.noContent().build();
+    }
+
+    private SeasonDto getSeasonDto(final Dto response)
+    {
+        final SeasonDto season = new SeasonDto();
+        season.setDescription(response.getDescription());
+        season.setId(response.getId());
+        season.setReleaseDate(response.getReleaseDate());
+        season.setSeason(response.getSeasonNumber());
+        season.setSerial(response.getSerial());
+        return season;
     }
 }

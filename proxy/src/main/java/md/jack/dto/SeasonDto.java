@@ -1,7 +1,5 @@
 package md.jack.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Builder
 @NoArgsConstructor
@@ -24,14 +22,12 @@ public class SeasonDto
     @NotNull
     private Integer season;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @NotNull
-    private LocalDateTime releaseDate;
+    private Date releaseDate;
 
     @NotNull
     @NotEmpty
     private String description;
 
-    @JsonIgnore
     private SerialDto serial;
 }

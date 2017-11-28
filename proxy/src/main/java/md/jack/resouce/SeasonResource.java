@@ -1,6 +1,7 @@
 package md.jack.resouce;
 
 import lombok.Getter;
+import md.jack.GenericException;
 import md.jack.dto.SeasonDto;
 import md.jack.web.controllers.EpisodeController;
 import md.jack.web.controllers.SeasonController;
@@ -23,14 +24,20 @@ public class SeasonResource extends ResourceSupport
         final Integer seasonId = season.getId();
         final Integer serialId = season.getSerial().getId();
 
-        add(linkTo(methodOn(SeasonController.class).get(serialId, seasonId)).withSelfRel());
+        try
+        {
+            add(linkTo(methodOn(SeasonController.class).get(serialId, seasonId)).withSelfRel());
+            add(linkTo(methodOn(SeasonController.class).getAll(serialId, "", null)).withRel("seasons"));
 
-        add(linkTo(methodOn(SeasonController.class).getAll(serialId, "", null)).withRel("seasons"));
+            final Link episodes = linkTo(methodOn(EpisodeController.class).getAll(serialId, seasonId, "", null))
+                    .withRel("episodes");
+            add(episodes);
 
-        final Link episodes = linkTo(methodOn(EpisodeController.class).getAll(serialId, seasonId, "", null))
-                .withRel("episodes");
-        add(episodes);
-
-        add(linkTo(methodOn(SerialController.class).get(serialId)).withRel("serial"));
+            add(linkTo(methodOn(SerialController.class).get(serialId)).withRel("serial"));
+        }
+        catch (GenericException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

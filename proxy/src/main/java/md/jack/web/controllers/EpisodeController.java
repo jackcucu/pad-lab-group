@@ -1,6 +1,8 @@
 package md.jack.web.controllers;
 
+import md.jack.GenericException;
 import md.jack.accessor.EpisodeAccessor;
+import md.jack.dto.Dto;
 import md.jack.dto.EpisodeDto;
 import md.jack.resouce.EpisodeResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ import static org.springframework.hateoas.PagedResources.PageMetadata;
 
 @RestController
 @RequestMapping("/api/serial/{serialId}/season/{seasonId}/episode")
-public class EpisodeController
+public class EpisodeController extends AbstractController
 {
     @Autowired
     private EpisodeAccessor episodeAccessor;
@@ -35,20 +37,22 @@ public class EpisodeController
     @GetMapping(value = "/{id}")
     public ResponseEntity<EpisodeResource> get(@PathVariable final Integer serialId,
                                                @PathVariable final Integer seasonId,
-                                               @PathVariable final Integer id)
+                                               @PathVariable final Integer id) throws GenericException
     {
-        final EpisodeDto episode = episodeAccessor.get(serialId, seasonId, id);
+        final Dto response = getResponse(episodeAccessor.get(serialId, seasonId, id));
 
-        return ResponseEntity.ok(new EpisodeResource(episode));
+        final EpisodeDto episodeDto = getEpisodeDto(response);
+
+        return ResponseEntity.ok(new EpisodeResource(episodeDto));
     }
 
     @GetMapping
     public ResponseEntity<PagedResources<EpisodeResource>> getAll(@PathVariable final Integer serialId,
                                                                   @PathVariable final Integer seasonId,
                                                                   @RequestParam(required = false) final String search,
-                                                                  @PageableDefault final Pageable page)
+                                                                  @PageableDefault final Pageable page) throws GenericException
     {
-        final Page<EpisodeDto> all = episodeAccessor.getAll(serialId, seasonId, search, page);
+        final Page<EpisodeDto> all = (Page<EpisodeDto>) getResponse(episodeAccessor.getAll(serialId, seasonId, search, page));
 
         final List<EpisodeResource> serials = all
                 .map(EpisodeResource::new)
@@ -63,9 +67,11 @@ public class EpisodeController
     @PostMapping(value = "/add")
     public ResponseEntity<EpisodeResource> addEpisode(@PathVariable final Integer serialId,
                                                       @PathVariable final Integer seasonId,
-                                                      @RequestBody @Validated final EpisodeDto episode) throws Exception
+                                                      @RequestBody @Validated final EpisodeDto episode) throws GenericException
     {
-        final EpisodeDto episodeDto = episodeAccessor.addEpisode(serialId, seasonId, episode);
+        final Dto response = getResponse(episodeAccessor.addEpisode(serialId, seasonId, episode));
+
+        final EpisodeDto episodeDto = getEpisodeDto(response);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("")
@@ -78,10 +84,22 @@ public class EpisodeController
     @DeleteMapping(value = "/delete")
     public ResponseEntity<?> delete(@PathVariable final Integer serialId,
                                     @PathVariable final Integer seasonId,
-                                    @PathVariable final Integer id)
+                                    @PathVariable final Integer id) throws GenericException
     {
-        episodeAccessor.delete(serialId, seasonId, id);
+        getResponse(episodeAccessor.delete(serialId, seasonId, id));
 
         return ResponseEntity.noContent().build();
+    }
+
+    private EpisodeDto getEpisodeDto(final Dto response)
+    {
+        final EpisodeDto episodeDto = new EpisodeDto();
+
+        episodeDto.setDescription(response.getDescription());
+        episodeDto.setId(response.getId());
+        episodeDto.setName(response.getName());
+        episodeDto.setOrd(response.getOrd());
+        episodeDto.setSeason(response.getSeason());
+        return episodeDto;
     }
 }

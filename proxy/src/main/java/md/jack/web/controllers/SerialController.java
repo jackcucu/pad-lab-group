@@ -1,6 +1,8 @@
 package md.jack.web.controllers;
 
+import md.jack.GenericException;
 import md.jack.accessor.SerialAccessor;
+import md.jack.dto.Dto;
 import md.jack.dto.SerialDto;
 import md.jack.resouce.SerialResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,24 +30,27 @@ import static org.springframework.hateoas.PagedResources.PageMetadata;
 
 @RestController
 @RequestMapping("/api/serial")
-public class SerialController
+public class SerialController extends AbstractController
 {
     @Autowired
     private SerialAccessor serialAccessor;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SerialResource> get(@PathVariable final Integer id)
+    public ResponseEntity<SerialResource> get(@PathVariable final Integer id) throws GenericException
     {
-        final SerialDto serial = serialAccessor.get(id);
+        final Dto response = getResponse(serialAccessor.get(id));
 
-        return ResponseEntity.ok(new SerialResource(serial));
+
+        final SerialDto serialDto = getSerialDto(response);
+
+        return ResponseEntity.ok(new SerialResource(serialDto));
     }
 
     @GetMapping
     public ResponseEntity<PagedResources<SerialResource>> getAll(@RequestParam(required = false) final String search,
-                                                                 @PageableDefault final Pageable page)
+                                                                 @PageableDefault final Pageable page) throws GenericException
     {
-        final Page<SerialDto> all = serialAccessor.getAll(search, page);
+        final Page<SerialDto> all = (Page<SerialDto>) getResponse(serialAccessor.getAll(search, page));
 
         final List<SerialResource> serials = all
                 .map(SerialResource::new)
@@ -59,22 +64,34 @@ public class SerialController
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<SerialResource> addSerial(@RequestBody @Validated final SerialDto serial)
+    public ResponseEntity<SerialResource> addSerial(@RequestBody @Validated final SerialDto serial) throws GenericException
     {
-        final SerialDto serialDto = serialAccessor.addSerial(serial);
+        final Dto response = getResponse(serialAccessor.addSerial(serial));
+
+        final SerialDto serialDto = getSerialDto(response);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("get")
                 .buildAndExpand(serialDto.getName())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(new SerialResource(serial));
+        return ResponseEntity.created(uri).body(new SerialResource(serialDto));
+    }
+
+    private SerialDto getSerialDto(final Dto response)
+    {
+        final SerialDto serialDto = new SerialDto();
+
+        serialDto.setId(response.getId());
+        serialDto.setName(response.getName());
+
+        return serialDto;
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> delete(@PathVariable final Integer id)
+    public ResponseEntity<?> delete(@PathVariable final Integer id) throws GenericException
     {
-        serialAccessor.delete(id);
+        getResponse(serialAccessor.delete(id));
 
         return ResponseEntity.noContent().build();
     }

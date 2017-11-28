@@ -1,6 +1,5 @@
 package md.pad.model.db;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -34,19 +33,17 @@ public class Season extends AbstractEntity
 {
     @Min(value = 1)
     @NotNull
-    @Column(unique = true)
-    private Integer season;
+    @Column(unique = true, name = "season_number")
+    private Integer seasonNumber;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "release_date")
     @NotNull
-    private LocalDateTime releaseDate;
+    private Date releaseDate;
 
     @NotNull
     @NotEmpty
     private String description;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "serial_id")
     private Serial serial;

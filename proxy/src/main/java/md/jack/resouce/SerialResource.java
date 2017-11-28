@@ -1,6 +1,7 @@
 package md.jack.resouce;
 
 import lombok.Getter;
+import md.jack.GenericException;
 import md.jack.dto.SerialDto;
 import md.jack.web.controllers.SeasonController;
 import md.jack.web.controllers.SerialController;
@@ -19,12 +20,18 @@ public class SerialResource extends ResourceSupport
     {
         this.serial = serial;
 
-        add(linkTo(methodOn(SerialController.class).get(serial.getId())).withSelfRel());
+        try
+        {
+            add(linkTo(methodOn(SerialController.class).get(serial.getId())).withSelfRel());
+            add(linkTo(SerialController.class).withRel("serials"));
 
-        add(linkTo(SerialController.class).withRel("serials"));
-
-        final Link seasons = linkTo(methodOn(SeasonController.class).getAll(serial.getId(), "", null))
-                .withRel("seasons");
-        add(seasons);
+            final Link seasons = linkTo(methodOn(SeasonController.class).getAll(serial.getId(), "", null))
+                    .withRel("seasons");
+            add(seasons);
+        }
+        catch (GenericException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

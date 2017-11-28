@@ -1,26 +1,23 @@
-package md.jack.model.api;
+package md.pad.model.api;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import md.jack.dto.Dto;
 
 @Data
 @NoArgsConstructor
 public class ApiResponse
 {
     private String message;
-
     private boolean status;
+    private Object result;
 
-    private Dto result;
-
-    public ApiResponse(final Dto result)
+    public ApiResponse(final Object result)
     {
         this.status = true;
         this.result = result;
     }
 
-    public ApiResponse(final String message, final Dto result)
+    public ApiResponse(final String message, final Object result)
     {
         this.status = true;
         this.message = message;
