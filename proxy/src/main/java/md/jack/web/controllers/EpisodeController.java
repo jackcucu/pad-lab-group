@@ -7,6 +7,7 @@ import md.jack.dto.EpisodeDto;
 import md.jack.resouce.EpisodeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedResources;
@@ -52,7 +53,16 @@ public class EpisodeController extends AbstractController
                                                                   @RequestParam(required = false) final String search,
                                                                   @PageableDefault final Pageable page) throws GenericException
     {
-        final Page<EpisodeDto> all = (Page<EpisodeDto>) getResponse(episodeAccessor.getAll(serialId, seasonId, search, page));
+        final Dto response = getResponse(episodeAccessor.getAll(
+                serialId,
+                seasonId,
+                search,
+                page.getPageSize(),
+                page.getPageNumber()));
+
+        final List<EpisodeDto> list = response.getEpisodes();
+
+        final Page<EpisodeDto> all = new PageImpl<>(list, page, response.getTotalElements());
 
         final List<EpisodeResource> serials = all
                 .map(EpisodeResource::new)

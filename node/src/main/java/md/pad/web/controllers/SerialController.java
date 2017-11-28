@@ -2,9 +2,11 @@ package md.pad.web.controllers;
 
 import md.pad.exceptions.SerialException;
 import md.pad.model.api.ApiResponse;
+import md.pad.model.api.SerialDto;
 import md.pad.model.db.Serial;
 import md.pad.service.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/serial")
@@ -37,7 +41,16 @@ public class SerialController
     public ApiResponse getAll(@RequestParam(required = false) final String search,
                               @PageableDefault final Pageable page)
     {
-        return new ApiResponse(serialService.getAll(search, page));
+        final Page<Serial> all = serialService.getAll(search, page);
+
+        final List<Serial> content = all.getContent();
+
+        final SerialDto serialDto = new SerialDto();
+
+        serialDto.setSerials(content);
+        serialDto.setTotalElements(all.getTotalElements());
+
+        return new ApiResponse(serialDto);
     }
 
     @PostMapping(value = "/add")

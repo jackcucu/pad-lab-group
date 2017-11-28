@@ -1,6 +1,5 @@
 package md.jack.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +29,5 @@ public class EpisodeDto
     @Min(1)
     private Integer ord;
 
-    @JsonIgnore
     private SeasonDto season;
 }

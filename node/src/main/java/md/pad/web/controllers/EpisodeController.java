@@ -2,11 +2,14 @@ package md.pad.web.controllers;
 
 import md.pad.exceptions.SerialException;
 import md.pad.model.api.ApiResponse;
+import md.pad.model.api.EpisodeDto;
 import md.pad.model.db.Episode;
 import md.pad.model.db.Season;
 import md.pad.service.EpisodeService;
 import md.pad.service.SeasonService;
+import md.pad.service.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/serial/{serialId}/season/{seasonId}/episode")
 public class EpisodeController
@@ -29,23 +34,43 @@ public class EpisodeController
     @Autowired
     private SeasonService seasonService;
 
+    @Autowired
+    private SerialService serialService;
+
     @GetMapping(value = "/{id}")
     public ApiResponse get(@PathVariable final Integer serialId,
                            @PathVariable final Integer seasonId,
                            @PathVariable final Integer id) throws SerialException
     {
+        serialService.getById(serialId).orElseThrow(() -> new SerialException("Serial not found"));
+
+        seasonService.getSeasonForSerial(serialId, seasonId).orElseThrow(() -> new SerialException("Season not found"));
+
         return episodeService.getEpisodeForSeason(seasonId, id)
                 .map(ApiResponse::new)
-                .orElseThrow(() -> new SerialException("Serial not found"));
+                .orElseThrow(() -> new SerialException("Episode not found"));
     }
 
     @GetMapping
     public ApiResponse getAll(@PathVariable final Integer serialId,
-                                @PathVariable final Integer seasonId,
-                                @RequestParam(required = false) final String search,
-                                @PageableDefault final Pageable page)
+                              @PathVariable final Integer seasonId,
+                              @RequestParam(required = false) final String search,
+                              @PageableDefault final Pageable page) throws SerialException
     {
-        return new ApiResponse(episodeService.getEpisodesForSeason(seasonId, search, page));
+        serialService.getById(serialId).orElseThrow(() -> new SerialException("Serial not found"));
+
+        seasonService.getSeasonForSerial(serialId, seasonId).orElseThrow(() -> new SerialException("Season not found"));
+
+        final Page<Episode> all = episodeService.getAll(search, page);
+
+        final List<Episode> content = all.getContent();
+
+        final EpisodeDto episodeDto = new EpisodeDto();
+
+        episodeDto.setEpisodes(content);
+        episodeDto.setTotalElements(all.getTotalElements());
+
+        return new ApiResponse(episodeDto);
     }
 
     @PostMapping(value = "/add")
@@ -68,6 +93,8 @@ public class EpisodeController
                                     @PathVariable final Integer seasonId,
                                     @PathVariable final Integer id) throws SerialException
     {
+        serialService.getById(serialId).orElseThrow(() -> new SerialException("Serial not found"));
+
         episodeService.getEpisodeForSeason(seasonId, id)
                 .orElseThrow(() -> new SerialException("Episode not found"));
 

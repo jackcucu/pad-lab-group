@@ -1,14 +1,14 @@
 package md.pad.model.api;
 
 import lombok.Data;
-import md.pad.model.db.Serial;
+import md.pad.model.db.Season;
 
 import java.util.List;
 
 @Data
-public class SerialDto
+public class SeasonDto
 {
-    private List<Serial> serials;
+    private List<Season> seasons;
 
     private long totalElements;
 }

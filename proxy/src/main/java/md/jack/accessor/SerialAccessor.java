@@ -3,8 +3,6 @@ package md.jack.accessor;
 import md.jack.dto.SerialDto;
 import md.jack.model.api.ApiResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +19,8 @@ public interface SerialAccessor
 
     @GetMapping
     ApiResponse getAll(@RequestParam(value = "search", required = false) String search,
-                       @PageableDefault Pageable page);
+                       @RequestParam(value = "size") int size,
+                       @RequestParam(value = "page") int page);
 
     @PostMapping(value = "/add")
     ApiResponse addSerial(@RequestBody @Validated SerialDto serial);

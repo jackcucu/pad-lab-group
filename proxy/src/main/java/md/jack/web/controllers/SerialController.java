@@ -7,6 +7,7 @@ import md.jack.dto.SerialDto;
 import md.jack.resouce.SerialResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedResources;
@@ -50,7 +51,11 @@ public class SerialController extends AbstractController
     public ResponseEntity<PagedResources<SerialResource>> getAll(@RequestParam(required = false) final String search,
                                                                  @PageableDefault final Pageable page) throws GenericException
     {
-        final Page<SerialDto> all = (Page<SerialDto>) getResponse(serialAccessor.getAll(search, page));
+        final Dto response = getResponse(serialAccessor.getAll(search, page.getPageSize(), page.getPageNumber()));
+
+        final List<SerialDto> list = response.getSerials();
+
+        final Page<SerialDto> all = new PageImpl<>(list, page, response.getTotalElements());
 
         final List<SerialResource> serials = all
                 .map(SerialResource::new)

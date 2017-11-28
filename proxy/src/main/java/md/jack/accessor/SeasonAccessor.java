@@ -3,8 +3,6 @@ package md.jack.accessor;
 import md.jack.dto.SeasonDto;
 import md.jack.model.api.ApiResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +21,8 @@ public interface SeasonAccessor
     @GetMapping(value = "/{serialId}/season")
     ApiResponse getAll(@PathVariable("serialId") Integer serialId,
                        @RequestParam(value = "search", required = false) String search,
-                       @PageableDefault Pageable page);
+                       @RequestParam(value = "size") int size,
+                       @RequestParam(value = "page") int page);
 
     @PostMapping(value = "/{serialId}/season/add")
     ApiResponse addSeason(@PathVariable("serialId") Integer serialId,

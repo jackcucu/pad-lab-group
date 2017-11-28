@@ -7,6 +7,7 @@ import md.jack.dto.SeasonDto;
 import md.jack.resouce.SeasonResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedResources;
@@ -49,7 +50,15 @@ public class SeasonController extends AbstractController
                                                                  @RequestParam(required = false) final String search,
                                                                  @PageableDefault final Pageable page) throws GenericException
     {
-        final Page<SeasonDto> all = (Page<SeasonDto>) getResponse(seasonAccessor.getAll(serialId, search, page));
+        final Dto response = getResponse(seasonAccessor.getAll(
+                serialId,
+                search,
+                page.getPageSize(),
+                page.getPageNumber()));
+
+        final List<SeasonDto> list = response.getSeasons();
+
+        final Page<SeasonDto> all = new PageImpl<>(list, page, response.getTotalElements());
 
         final List<SeasonResource> seasons = all
                 .map(SeasonResource::new)
@@ -92,7 +101,7 @@ public class SeasonController extends AbstractController
         season.setDescription(response.getDescription());
         season.setId(response.getId());
         season.setReleaseDate(response.getReleaseDate());
-        season.setSeason(response.getSeasonNumber());
+        season.setSeasonNumber(response.getSeasonNumber());
         season.setSerial(response.getSerial());
         return season;
     }

@@ -1,5 +1,6 @@
 package md.jack.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,9 +21,10 @@ public class SeasonDto
 
     @Min(value = 1)
     @NotNull
-    private Integer season;
+    private Integer seasonNumber;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date releaseDate;
 
     @NotNull
