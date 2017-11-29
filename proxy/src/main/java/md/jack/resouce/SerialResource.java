@@ -8,11 +8,13 @@ import md.jack.web.controllers.SerialController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 
+import java.io.Serializable;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Getter
-public class SerialResource extends ResourceSupport
+public class SerialResource extends ResourceSupport implements Serializable
 {
     private final SerialDto serial;
 

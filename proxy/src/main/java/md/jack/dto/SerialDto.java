@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class SerialDto
+public class SerialDto implements Serializable
 {
     private Integer id;
 
