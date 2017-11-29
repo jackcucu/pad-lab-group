@@ -1,10 +1,10 @@
 package md.jack.web.controllers;
 
 import md.jack.GenericException;
-import md.jack.accessor.SeasonAccessor;
 import md.jack.dto.Dto;
 import md.jack.dto.SeasonDto;
 import md.jack.resouce.SeasonResource;
+import md.jack.service.SeasonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,30 +31,24 @@ import java.util.List;
 public class SeasonController extends AbstractController
 {
     @Autowired
-    private SeasonAccessor seasonAccessor;
+    private SeasonService seasonService;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SeasonResource> get(@PathVariable final Integer serialId,
-                                              @PathVariable final Integer id) throws GenericException
+    public SeasonResource get(@PathVariable final Integer serialId,
+                              @PathVariable final Integer id) throws GenericException
     {
-        final Dto response = getResponse(seasonAccessor.get(serialId, id));
+        final SeasonDto season = seasonService.getById(serialId, id);
 
-        final SeasonDto season = getSeasonDto(response);
-
-        return ResponseEntity.ok(new SeasonResource(season));
+        return new SeasonResource(season);
     }
 
 
     @GetMapping
-    public ResponseEntity<PagedResources<SeasonResource>> getAll(@PathVariable final Integer serialId,
-                                                                 @RequestParam(required = false) final String search,
-                                                                 @PageableDefault final Pageable page) throws GenericException
+    public PagedResources<SeasonResource> getAll(@PathVariable final Integer serialId,
+                                                 @RequestParam(required = false) final String search,
+                                                 @PageableDefault final Pageable page) throws GenericException
     {
-        final Dto response = getResponse(seasonAccessor.getAll(
-                serialId,
-                search,
-                page.getPageSize(),
-                page.getPageNumber()));
+        final Dto response = seasonService.getSeasons(serialId, search, page);
 
         final List<SeasonDto> list = response.getSeasons();
 
@@ -64,19 +58,15 @@ public class SeasonController extends AbstractController
                 .map(SeasonResource::new)
                 .getContent();
 
-        final PagedResources<SeasonResource> resources = new PagedResources<>(seasons,
+        return new PagedResources<>(seasons,
                 new PagedResources.PageMetadata(all.getSize(), all.getNumber(), all.getTotalElements()));
-
-        return ResponseEntity.ok(resources);
     }
 
     @PostMapping(value = "/add")
     public ResponseEntity<SeasonResource> addSeason(@PathVariable final Integer serialId,
                                                     @RequestBody @Validated final SeasonDto season) throws GenericException
     {
-        final Dto response = getResponse(seasonAccessor.addSeason(serialId, season));
-
-        final SeasonDto seasonDto = getSeasonDto(response);
+        final SeasonDto seasonDto = seasonService.addSeason(serialId, season);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("")
@@ -90,19 +80,8 @@ public class SeasonController extends AbstractController
     public ResponseEntity<?> delete(@PathVariable final Integer serialId,
                                     @PathVariable final Integer id) throws GenericException
     {
-        getResponse(seasonAccessor.delete(serialId, id));
+        seasonService.deleteSeason(serialId, id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    private SeasonDto getSeasonDto(final Dto response)
-    {
-        final SeasonDto season = new SeasonDto();
-        season.setDescription(response.getDescription());
-        season.setId(response.getId());
-        season.setReleaseDate(response.getReleaseDate());
-        season.setSeasonNumber(response.getSeasonNumber());
-        season.setSerial(response.getSerial());
-        return season;
     }
 }
