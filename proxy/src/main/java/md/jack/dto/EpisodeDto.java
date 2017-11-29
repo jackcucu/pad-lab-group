@@ -8,12 +8,13 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class EpisodeDto
+public class EpisodeDto implements Serializable
 {
     private Integer id;
 

@@ -7,7 +7,6 @@ import md.jack.dto.EpisodeDto;
 import md.jack.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class EpisodeServiceImpl implements EpisodeService
     }
 
 
-    @Cacheable(value = "episodes", key = "#serialId + #seasonId + #pageable.pageNumber + #pageable.pageSize + #search")
+    @Cacheable(value = "episodes", key = "#serialId + #seasonId + #pageable.pageNumber + #pageable.pageSize")
     @Override
     public Dto getEpisodes(final Integer serialId, final Integer seasonId, final String search, final Pageable pageable) throws GenericException
     {
@@ -42,7 +41,6 @@ public class EpisodeServiceImpl implements EpisodeService
                 pageable.getPageNumber()));
     }
 
-    @CachePut(value = "episode", key = "#serialId + #seasonId + #episodeDto.id")
     @Override
     public EpisodeDto addEpisode(final Integer serialId, final Integer seasonId, final EpisodeDto episodeDto) throws GenericException
     {
