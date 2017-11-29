@@ -9,13 +9,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class SeasonDto
+public class SeasonDto implements Serializable
 {
     private Integer id;
 

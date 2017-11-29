@@ -7,7 +7,6 @@ import md.jack.dto.SeasonDto;
 import md.jack.service.SeasonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class SeasonServiceImpl implements SeasonService
         return getSeasonDto(response);
     }
 
-    @Cacheable(value = "seasons", key = "#serialId + #pageable.pageNumber + #pageable.pageSize + #search")
+    @Cacheable(value = "seasons", key = "#serialId + #pageable.pageNumber + #pageable.pageSize")
     @Override
     public Dto getSeasons(final Integer serialId, final String search, final Pageable pageable) throws GenericException
     {
@@ -40,7 +39,6 @@ public class SeasonServiceImpl implements SeasonService
                 pageable.getPageNumber()));
     }
 
-    @CachePut(value = "season", key = "#serialId + #seasonDto.id")
     @Override
     public SeasonDto addSeason(final Integer serialId, final SeasonDto seasonDto) throws GenericException
     {
