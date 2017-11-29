@@ -1,10 +1,10 @@
 package md.jack.web.controllers;
 
 import md.jack.GenericException;
-import md.jack.accessor.EpisodeAccessor;
 import md.jack.dto.Dto;
 import md.jack.dto.EpisodeDto;
 import md.jack.resouce.EpisodeResource;
+import md.jack.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,32 +33,25 @@ import static org.springframework.hateoas.PagedResources.PageMetadata;
 public class EpisodeController extends AbstractController
 {
     @Autowired
-    private EpisodeAccessor episodeAccessor;
+    private EpisodeService episodeService;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<EpisodeResource> get(@PathVariable final Integer serialId,
-                                               @PathVariable final Integer seasonId,
-                                               @PathVariable final Integer id) throws GenericException
+    public EpisodeResource get(@PathVariable final Integer serialId,
+                               @PathVariable final Integer seasonId,
+                               @PathVariable final Integer id) throws GenericException
     {
-        final Dto response = getResponse(episodeAccessor.get(serialId, seasonId, id));
+        final EpisodeDto episodeDto = episodeService.getById(serialId, seasonId, id);
 
-        final EpisodeDto episodeDto = getEpisodeDto(response);
-
-        return ResponseEntity.ok(new EpisodeResource(episodeDto));
+        return new EpisodeResource(episodeDto);
     }
 
     @GetMapping
-    public ResponseEntity<PagedResources<EpisodeResource>> getAll(@PathVariable final Integer serialId,
-                                                                  @PathVariable final Integer seasonId,
-                                                                  @RequestParam(required = false) final String search,
-                                                                  @PageableDefault final Pageable page) throws GenericException
+    public PagedResources<EpisodeResource> getAll(@PathVariable final Integer serialId,
+                                                  @PathVariable final Integer seasonId,
+                                                  @RequestParam(required = false) final String search,
+                                                  @PageableDefault final Pageable page) throws GenericException
     {
-        final Dto response = getResponse(episodeAccessor.getAll(
-                serialId,
-                seasonId,
-                search,
-                page.getPageSize(),
-                page.getPageNumber()));
+        final Dto response = episodeService.getEpisodes(serialId, seasonId, search, page);
 
         final List<EpisodeDto> list = response.getEpisodes();
 
@@ -68,10 +61,8 @@ public class EpisodeController extends AbstractController
                 .map(EpisodeResource::new)
                 .getContent();
 
-        final PagedResources<EpisodeResource> resources = new PagedResources<>(serials,
+        return new PagedResources<>(serials,
                 new PageMetadata(all.getSize(), all.getNumber(), all.getTotalElements()));
-
-        return ResponseEntity.ok(resources);
     }
 
     @PostMapping(value = "/add")
@@ -79,9 +70,7 @@ public class EpisodeController extends AbstractController
                                                       @PathVariable final Integer seasonId,
                                                       @RequestBody @Validated final EpisodeDto episode) throws GenericException
     {
-        final Dto response = getResponse(episodeAccessor.addEpisode(serialId, seasonId, episode));
-
-        final EpisodeDto episodeDto = getEpisodeDto(response);
+        final EpisodeDto episodeDto = episodeService.addEpisode(serialId, seasonId, episode);
 
         final URI uri = MvcUriComponentsBuilder.fromController(getClass())
                 .path("")
@@ -96,20 +85,8 @@ public class EpisodeController extends AbstractController
                                     @PathVariable final Integer seasonId,
                                     @PathVariable final Integer id) throws GenericException
     {
-        getResponse(episodeAccessor.delete(serialId, seasonId, id));
+        episodeService.deleteEpisode(serialId, seasonId, id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    private EpisodeDto getEpisodeDto(final Dto response)
-    {
-        final EpisodeDto episodeDto = new EpisodeDto();
-
-        episodeDto.setDescription(response.getDescription());
-        episodeDto.setId(response.getId());
-        episodeDto.setName(response.getName());
-        episodeDto.setOrd(response.getOrd());
-        episodeDto.setSeason(response.getSeason());
-        return episodeDto;
     }
 }
