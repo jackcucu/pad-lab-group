@@ -1,6 +1,7 @@
 package md.jack.web.controllers;
 
 import md.jack.GenericException;
+import md.jack.SerialService;
 import md.jack.accessor.SerialAccessor;
 import md.jack.dto.Dto;
 import md.jack.dto.SerialDto;
@@ -36,20 +37,20 @@ public class SerialController extends AbstractController
     @Autowired
     private SerialAccessor serialAccessor;
 
+    @Autowired
+    private SerialService serialService;
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SerialResource> get(@PathVariable final Integer id) throws GenericException
+    public SerialResource get(@PathVariable final Integer id) throws GenericException
     {
-        final Dto response = getResponse(serialAccessor.get(id));
+        final SerialDto serialDto = serialService.getById(id);
 
-
-        final SerialDto serialDto = getSerialDto(response);
-
-        return ResponseEntity.ok(new SerialResource(serialDto));
+        return new SerialResource(serialDto);
     }
 
     @GetMapping
-    public ResponseEntity<PagedResources<SerialResource>> getAll(@RequestParam(required = false) final String search,
-                                                                 @PageableDefault final Pageable page) throws GenericException
+    public PagedResources<SerialResource> getAll(@RequestParam(required = false) final String search,
+                                                 @PageableDefault final Pageable page) throws GenericException
     {
         final Dto response = getResponse(serialAccessor.getAll(search, page.getPageSize(), page.getPageNumber()));
 
@@ -65,7 +66,7 @@ public class SerialController extends AbstractController
                 new PageMetadata(all
                         .getSize(), all.getNumber(), all.getTotalElements()));
 
-        return ResponseEntity.ok(resources);
+        return resources;
     }
 
     @PostMapping(value = "/add")
