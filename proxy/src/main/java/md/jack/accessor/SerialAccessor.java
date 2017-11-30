@@ -6,8 +6,9 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -22,9 +23,12 @@ public interface SerialAccessor
                        @RequestParam(value = "size") int size,
                        @RequestParam(value = "page") int page);
 
-    @PostMapping(value = "/add")
+    @PutMapping
     ApiResponse addSerial(@RequestBody @Validated SerialDto serial);
 
-    @DeleteMapping(value = "/{id}/delete")
+    @PatchMapping(value = "/{id}")
+    ApiResponse updateSerial(@PathVariable("id") Integer id, @RequestBody @Validated SerialDto serial);
+
+    @DeleteMapping(value = "/{id}")
     ApiResponse delete(@PathVariable("id") Integer id);
 }
