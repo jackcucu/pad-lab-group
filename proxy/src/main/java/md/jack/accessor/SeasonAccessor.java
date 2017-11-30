@@ -26,12 +26,12 @@ public interface SeasonAccessor
 
     @PutMapping(value = "/{serialId}/season")
     ApiResponse addSeason(@PathVariable("serialId") Integer serialId,
-                          @RequestBody @Validated SeasonDto episode);
+                          @RequestBody @Validated SeasonDto season);
 
     @PutMapping(value = "/{serialId}/season/{id}")
     ApiResponse updateSeason(@PathVariable("serialId") Integer serialId,
                              @PathVariable("id") Integer id,
-                             @RequestBody @Validated SeasonDto episode);
+                             @RequestBody @Validated SeasonDto season);
 
     @DeleteMapping(value = "/{serialId}/season/{id}")
     ApiResponse delete(@PathVariable("serialId") Integer serialId,
