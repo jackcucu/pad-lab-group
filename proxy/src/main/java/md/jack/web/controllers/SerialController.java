@@ -5,6 +5,7 @@ import md.jack.dto.Dto;
 import md.jack.dto.SerialDto;
 import md.jack.resouce.SerialResource;
 import md.jack.service.SerialService;
+import md.jack.validation.Put;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,8 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,8 +65,9 @@ public class SerialController extends AbstractController
                         .getSize(), all.getNumber(), all.getTotalElements()));
     }
 
-    @PostMapping(value = "/add")
-    public ResponseEntity<SerialResource> addSerial(@RequestBody @Validated final SerialDto serial) throws GenericException
+    @PutMapping
+    public ResponseEntity<SerialResource> addSerial(@RequestBody
+                                                    @Validated(Put.class) final SerialDto serial) throws GenericException
     {
         final SerialDto serialDto = serialService.addSerial(serial);
 
@@ -76,7 +79,21 @@ public class SerialController extends AbstractController
         return ResponseEntity.created(uri).body(new SerialResource(serialDto));
     }
 
-    @DeleteMapping(value = "/{id}/delete")
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<SerialResource> updateSerial(@PathVariable final Integer id,
+                                                       @RequestBody @Validated final SerialDto serial) throws GenericException
+    {
+        final SerialDto serialDto = serialService.updateSerial(id, serial);
+
+        final URI uri = MvcUriComponentsBuilder.fromController(getClass())
+                .path("get")
+                .buildAndExpand(serialDto.getName())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(new SerialResource(serialDto));
+    }
+
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable final Integer id) throws GenericException
     {
         serialService.deleteSerial(id);

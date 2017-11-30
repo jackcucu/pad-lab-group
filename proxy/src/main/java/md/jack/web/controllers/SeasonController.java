@@ -5,6 +5,7 @@ import md.jack.dto.Dto;
 import md.jack.dto.SeasonDto;
 import md.jack.resouce.SeasonResource;
 import md.jack.service.SeasonService;
+import md.jack.validation.Put;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,8 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,9 +64,9 @@ public class SeasonController extends AbstractController
                 new PagedResources.PageMetadata(all.getSize(), all.getNumber(), all.getTotalElements()));
     }
 
-    @PostMapping(value = "/add")
+    @PutMapping
     public ResponseEntity<SeasonResource> addSeason(@PathVariable final Integer serialId,
-                                                    @RequestBody @Validated final SeasonDto season) throws GenericException
+                                                    @RequestBody @Validated(Put.class) final SeasonDto season) throws GenericException
     {
         final SeasonDto seasonDto = seasonService.addSeason(serialId, season);
 
@@ -76,7 +78,22 @@ public class SeasonController extends AbstractController
         return ResponseEntity.created(uri).body(new SeasonResource(seasonDto));
     }
 
-    @DeleteMapping(value = "/delete")
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<SeasonResource> updateSeason(@PathVariable final Integer serialId,
+                                                       @PathVariable final Integer id,
+                                                       @RequestBody @Validated final SeasonDto season) throws GenericException
+    {
+        final SeasonDto seasonDto = seasonService.updateSeason(serialId, id, season);
+
+        final URI uri = MvcUriComponentsBuilder.fromController(getClass())
+                .path("")
+                .buildAndExpand(serialId, seasonDto.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(new SeasonResource(seasonDto));
+    }
+
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable final Integer serialId,
                                     @PathVariable final Integer id) throws GenericException
     {

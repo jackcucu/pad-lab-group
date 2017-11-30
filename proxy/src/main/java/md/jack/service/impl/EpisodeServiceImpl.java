@@ -7,6 +7,7 @@ import md.jack.dto.EpisodeDto;
 import md.jack.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,15 @@ public class EpisodeServiceImpl implements EpisodeService
     public EpisodeDto addEpisode(final Integer serialId, final Integer seasonId, final EpisodeDto episodeDto) throws GenericException
     {
         final Dto response = getResponse(episodeAccessor.addEpisode(serialId, seasonId, episodeDto));
+
+        return getEpisodeDto(response);
+    }
+
+    @CachePut(value = "episode", key = "#serialId + #seasonId + #id")
+    @Override
+    public EpisodeDto updateEpisode(final Integer serialId, final Integer seasonId, final Integer id, final EpisodeDto episodeDto) throws GenericException
+    {
+        final Dto response = getResponse(episodeAccessor.updateEpisode(serialId, seasonId, id, episodeDto));
 
         return getEpisodeDto(response);
     }

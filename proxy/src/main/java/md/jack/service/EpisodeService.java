@@ -13,5 +13,7 @@ public interface EpisodeService
 
     EpisodeDto addEpisode(Integer serialId, Integer seasonId, EpisodeDto episodeDto) throws GenericException;
 
+    EpisodeDto updateEpisode(Integer serialId, Integer seasonId, Integer id, EpisodeDto episodeDto) throws GenericException;
+
     void deleteEpisode(Integer serialId, Integer seasonId, Integer id) throws GenericException;
 }

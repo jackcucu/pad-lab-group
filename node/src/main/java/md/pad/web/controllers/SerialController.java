@@ -14,13 +14,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static md.pad.util.FunctionalUtils.safeSet;
 
 @RestController
 @RequestMapping("/api/serial")
@@ -53,7 +55,7 @@ public class SerialController
         return new ApiResponse(serialDto);
     }
 
-    @PostMapping(value = "/add")
+    @PutMapping
     public ApiResponse addSerial(@RequestBody @Validated final Serial serial)
     {
         serialService.add(serial);
@@ -61,10 +63,24 @@ public class SerialController
         return new ApiResponse(serial);
     }
 
-    @DeleteMapping(value = "/{id}/delete")
+    @PutMapping("/{id}")
+    public ApiResponse updateSerial(@PathVariable final Integer id,
+                                    @RequestBody @Validated final Serial serial) throws SerialException
+    {
+        final Serial serialLocal = serialService.getById(id)
+                .orElseThrow(() -> new SerialException("Serial not found"));
+
+        safeSet(serialLocal::setName, serial, Serial::getName);
+
+        serialService.edit(serialLocal);
+
+        return new ApiResponse(serialLocal);
+    }
+
+    @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable final Integer id) throws SerialException
     {
-        final Serial serial = serialService.getById(id)
+        serialService.getById(id)
                 .orElseThrow(() -> new SerialException("Serial not found"));
 
         serialService.delete(id);

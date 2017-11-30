@@ -7,6 +7,7 @@ import md.jack.dto.SeasonDto;
 import md.jack.service.SeasonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,15 @@ public class SeasonServiceImpl implements SeasonService
     public SeasonDto addSeason(final Integer serialId, final SeasonDto seasonDto) throws GenericException
     {
         final Dto response = getResponse(seasonAccessor.addSeason(serialId, seasonDto));
+
+        return getSeasonDto(response);
+    }
+
+    @Override
+    @CachePut(value = "season", key = "#serialId + #id")
+    public SeasonDto updateSeason(final Integer serialId, final Integer id, final SeasonDto seasonDto) throws GenericException
+    {
+        final Dto response = getResponse(seasonAccessor.updateSeason(serialId, id, seasonDto));
 
         return getSeasonDto(response);
     }

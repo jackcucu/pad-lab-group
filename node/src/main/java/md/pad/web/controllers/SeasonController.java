@@ -15,14 +15,17 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static md.pad.util.FunctionalUtils.safeSet;
 
 @RestController
 @RequestMapping("api/serial/{serialId}/season")
@@ -62,9 +65,9 @@ public class SeasonController
         return new ApiResponse(seasonDto);
     }
 
-    @PostMapping(value = "/add")
+    @PutMapping
     public ApiResponse addSeason(@PathVariable final Integer serialId,
-                            @RequestBody @Validated final Season season) throws Exception
+                                 @RequestBody @Validated final Season season) throws Exception
     {
         final Serial serial = serialService.getById(serialId)
                 .orElseThrow(() -> new SerialException("Serial Not Found"));
@@ -76,7 +79,29 @@ public class SeasonController
         return new ApiResponse(season);
     }
 
-    @DeleteMapping(value = "/delete")
+    @PatchMapping("/{id}")
+    public ApiResponse updateSeason(@PathVariable final Integer serialId,
+                                    @PathVariable final Integer id,
+                                    @RequestBody @Validated final Season season) throws Exception
+    {
+        final Serial serial = serialService.getById(serialId)
+                .orElseThrow(() -> new SerialException("Serial Not Found"));
+
+        final Season seasonLocal = serial.getSeasons().stream()
+                .filter(it -> it.getId().equals(id))
+                .findAny()
+                .orElseThrow(() -> new SerialException("Season Not Found"));
+
+        safeSet(seasonLocal::setDescription, season, Season::getDescription);
+        safeSet(seasonLocal::setReleaseDate, season, Season::getReleaseDate);
+        safeSet(seasonLocal::setSeasonNumber, season, Season::getSeasonNumber);
+
+        seasonService.edit(seasonLocal);
+
+        return new ApiResponse(seasonLocal);
+    }
+
+    @DeleteMapping
     public void delete(@PathVariable final Integer serialId,
                        @PathVariable final Integer id) throws SerialException
     {

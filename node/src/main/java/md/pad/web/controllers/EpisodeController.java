@@ -15,14 +15,17 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static md.pad.util.FunctionalUtils.safeSet;
 
 @RestController
 @RequestMapping("/api/serial/{serialId}/season/{seasonId}/episode")
@@ -73,10 +76,10 @@ public class EpisodeController
         return new ApiResponse(episodeDto);
     }
 
-    @PostMapping(value = "/add")
+    @PutMapping
     public ApiResponse addEpisode(@PathVariable final Integer serialId,
-                              @PathVariable final Integer seasonId,
-                              @RequestBody @Validated final Episode episode) throws Exception
+                                  @PathVariable final Integer seasonId,
+                                  @RequestBody @Validated final Episode episode) throws Exception
     {
         final Season season = seasonService.getSeasonForSerial(serialId, seasonId)
                 .orElseThrow(() -> new SerialException("Serial or Season Not Found"));
@@ -88,10 +91,33 @@ public class EpisodeController
         return new ApiResponse(episode);
     }
 
-    @DeleteMapping(value = "/delete")
+    @PatchMapping("/{id}")
+    public ApiResponse updateEpisode(@PathVariable final Integer serialId,
+                                     @PathVariable final Integer seasonId,
+                                     @PathVariable final Integer id,
+                                     @RequestBody @Validated final Episode episode) throws Exception
+    {
+        final Season season = seasonService.getSeasonForSerial(serialId, seasonId)
+                .orElseThrow(() -> new SerialException("Serial or Season Not Found"));
+
+        final Episode episodeLocal = season.getEpisodes().stream()
+                .filter(it -> it.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new SerialException("Episode Not Found"));
+
+        safeSet(episodeLocal::setDescription, episode, Episode::getDescription);
+        safeSet(episodeLocal::setName, episode, Episode::getName);
+        safeSet(episodeLocal::setOrd, episode, Episode::getOrd);
+
+        episodeService.edit(episodeLocal);
+
+        return new ApiResponse(episodeLocal);
+    }
+
+    @DeleteMapping
     public void delete(@PathVariable final Integer serialId,
-                                    @PathVariable final Integer seasonId,
-                                    @PathVariable final Integer id) throws SerialException
+                       @PathVariable final Integer seasonId,
+                       @PathVariable final Integer id) throws SerialException
     {
         serialService.getById(serialId).orElseThrow(() -> new SerialException("Serial not found"));
 
