@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static md.pad.util.FunctionalUtils.safeSet;
+
 @RestController
 @RequestMapping("api/serial/{serialId}/season")
 public class SeasonController
@@ -78,16 +80,23 @@ public class SeasonController
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse addSeason(@PathVariable final Integer serialId,
-                                 @PathVariable final Integer id,
-                                 @RequestBody @Validated final Season season) throws Exception
+    public ApiResponse updateSeason(@PathVariable final Integer serialId,
+                                    @PathVariable final Integer id,
+                                    @RequestBody @Validated final Season season) throws Exception
     {
         final Serial serial = serialService.getById(serialId)
                 .orElseThrow(() -> new SerialException("Serial Not Found"));
 
-        season.setSerial(serial);
+        final Season seasonLocal = serial.getSeasons().stream()
+                .filter(it -> it.getId().equals(id))
+                .findAny()
+                .orElseThrow(() -> new SerialException("Season Not Found"));
 
-        seasonService.add(season);
+        safeSet(seasonLocal::setDescription, season, Season::getDescription);
+        safeSet(seasonLocal::setReleaseDate, season, Season::getReleaseDate);
+        safeSet(seasonLocal::setSeasonNumber, season, Season::getSeasonNumber);
+
+        seasonService.edit(season);
 
         return new ApiResponse(season);
     }
