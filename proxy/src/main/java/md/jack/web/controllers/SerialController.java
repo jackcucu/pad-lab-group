@@ -16,8 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,7 +64,7 @@ public class SerialController extends AbstractController
                         .getSize(), all.getNumber(), all.getTotalElements()));
     }
 
-    @PostMapping(value = "/add")
+    @PutMapping
     public ResponseEntity<SerialResource> addSerial(@RequestBody @Validated final SerialDto serial) throws GenericException
     {
         final SerialDto serialDto = serialService.addSerial(serial);
@@ -76,7 +77,21 @@ public class SerialController extends AbstractController
         return ResponseEntity.created(uri).body(new SerialResource(serialDto));
     }
 
-    @DeleteMapping(value = "/{id}/delete")
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<SerialResource> updateSerial(@PathVariable final Integer id,
+                                                       @RequestBody @Validated final SerialDto serial) throws GenericException
+    {
+        final SerialDto serialDto = serialService.updateSerial(id, serial);
+
+        final URI uri = MvcUriComponentsBuilder.fromController(getClass())
+                .path("get")
+                .buildAndExpand(serialDto.getName())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(new SerialResource(serialDto));
+    }
+
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable final Integer id) throws GenericException
     {
         serialService.deleteSerial(id);

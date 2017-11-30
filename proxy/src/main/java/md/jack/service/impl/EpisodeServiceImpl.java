@@ -49,6 +49,12 @@ public class EpisodeServiceImpl implements EpisodeService
         return getEpisodeDto(response);
     }
 
+    @Override
+    public EpisodeDto updateEpisode(final Integer serialId, final Integer seasonId, final Integer id, final EpisodeDto episodeDto) throws GenericException
+    {
+        return null;
+    }
+
     @CacheEvict(value = "episode", key = "#serialId + #seasonId + #id")
     @Override
     public void deleteEpisode(final Integer serialId, final Integer seasonId, final Integer id) throws GenericException
