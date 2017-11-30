@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static md.pad.util.FunctionalUtils.safeSet;
+
 @RestController
 @RequestMapping("/api/serial")
 public class SerialController
@@ -64,8 +66,13 @@ public class SerialController
 
     @PatchMapping("/{id}")
     public ApiResponse updateSerial(@PathVariable final Integer id,
-                                    @RequestBody @Validated final Serial serial)
+                                    @RequestBody @Validated final Serial serial) throws SerialException
     {
+        final Serial serialLocal = serialService.getById(id)
+                .orElseThrow(() -> new SerialException("Serial not found"));
+
+        safeSet(serialLocal::setName, serial, Serial::getName);
+
         serialService.add(serial);
 
         return new ApiResponse(serial);
@@ -74,7 +81,7 @@ public class SerialController
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable final Integer id) throws SerialException
     {
-        final Serial serial = serialService.getById(id)
+        serialService.getById(id)
                 .orElseThrow(() -> new SerialException("Serial not found"));
 
         serialService.delete(id);

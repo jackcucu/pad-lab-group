@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static md.pad.util.FunctionalUtils.safeSet;
+
 @RestController
 @RequestMapping("/api/serial/{serialId}/season/{seasonId}/episode")
 public class EpisodeController
@@ -90,19 +92,26 @@ public class EpisodeController
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse addEpisode(@PathVariable final Integer serialId,
-                                  @PathVariable final Integer seasonId,
-                                  @PathVariable final Integer id,
-                                  @RequestBody @Validated final Episode episode) throws Exception
+    public ApiResponse updateEpisode(@PathVariable final Integer serialId,
+                                     @PathVariable final Integer seasonId,
+                                     @PathVariable final Integer id,
+                                     @RequestBody @Validated final Episode episode) throws Exception
     {
         final Season season = seasonService.getSeasonForSerial(serialId, seasonId)
                 .orElseThrow(() -> new SerialException("Serial or Season Not Found"));
 
-        episode.setSeason(season);
+        final Episode episodeLocal = season.getEpisodes().stream()
+                .filter(it -> it.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new SerialException("Episode Not Found"));
 
-        episodeService.add(episode);
+        safeSet(episodeLocal::setDescription, episode, Episode::getDescription);
+        safeSet(episodeLocal::setName, episode, Episode::getName);
+        safeSet(episodeLocal::setOrd, episode, Episode::getOrd);
 
-        return new ApiResponse(episode);
+        episodeService.edit(episodeLocal);
+
+        return new ApiResponse(episodeLocal);
     }
 
     @DeleteMapping
