@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,7 +63,7 @@ public class SerialController
         return new ApiResponse(serial);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ApiResponse updateSerial(@PathVariable final Integer id,
                                     @RequestBody @Validated final Serial serial) throws SerialException
     {
@@ -73,9 +72,9 @@ public class SerialController
 
         safeSet(serialLocal::setName, serial, Serial::getName);
 
-        serialService.add(serial);
+        serialService.edit(serialLocal);
 
-        return new ApiResponse(serial);
+        return new ApiResponse(serialLocal);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import md.jack.validation.Put;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
@@ -18,16 +19,16 @@ public class EpisodeDto implements Serializable
 {
     private Integer id;
 
-    @NotEmpty
-    @NotNull
+    @NotEmpty(groups = Put.class)
+    @NotNull(groups = Put.class)
     private String name;
 
-    @NotEmpty
-    @NotNull
+    @NotEmpty(groups = Put.class)
+    @NotNull(groups = Put.class)
     private String description;
 
-    @NotNull
-    @Min(1)
+    @NotNull(groups = Put.class)
+    @Min(value = 1, groups = Put.class)
     private Integer ord;
 
     private SeasonDto season;

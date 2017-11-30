@@ -6,7 +6,6 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +25,7 @@ public interface SerialAccessor
     @PutMapping
     ApiResponse addSerial(@RequestBody @Validated SerialDto serial);
 
-    @PatchMapping(value = "/{id}")
+    @PutMapping(value = "/{id}")
     ApiResponse updateSerial(@PathVariable("id") Integer id, @RequestBody @Validated SerialDto serial);
 
     @DeleteMapping(value = "/{id}")

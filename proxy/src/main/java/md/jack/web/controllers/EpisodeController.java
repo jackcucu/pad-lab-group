@@ -5,6 +5,7 @@ import md.jack.dto.Dto;
 import md.jack.dto.EpisodeDto;
 import md.jack.resouce.EpisodeResource;
 import md.jack.service.EpisodeService;
+import md.jack.validation.Put;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -69,7 +70,7 @@ public class EpisodeController extends AbstractController
     @PutMapping
     public ResponseEntity<EpisodeResource> addEpisode(@PathVariable final Integer serialId,
                                                       @PathVariable final Integer seasonId,
-                                                      @RequestBody @Validated final EpisodeDto episode) throws GenericException
+                                                      @RequestBody @Validated(Put.class) final EpisodeDto episode) throws GenericException
     {
         final EpisodeDto episodeDto = episodeService.addEpisode(serialId, seasonId, episode);
 

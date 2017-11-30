@@ -5,6 +5,7 @@ import md.jack.dto.Dto;
 import md.jack.dto.SerialDto;
 import md.jack.resouce.SerialResource;
 import md.jack.service.SerialService;
+import md.jack.validation.Put;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -65,7 +66,8 @@ public class SerialController extends AbstractController
     }
 
     @PutMapping
-    public ResponseEntity<SerialResource> addSerial(@RequestBody @Validated final SerialDto serial) throws GenericException
+    public ResponseEntity<SerialResource> addSerial(@RequestBody
+                                                    @Validated(Put.class) final SerialDto serial) throws GenericException
     {
         final SerialDto serialDto = serialService.addSerial(serial);
 

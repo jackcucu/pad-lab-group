@@ -96,9 +96,9 @@ public class SeasonController
         safeSet(seasonLocal::setReleaseDate, season, Season::getReleaseDate);
         safeSet(seasonLocal::setSeasonNumber, season, Season::getSeasonNumber);
 
-        seasonService.edit(season);
+        seasonService.edit(seasonLocal);
 
-        return new ApiResponse(season);
+        return new ApiResponse(seasonLocal);
     }
 
     @DeleteMapping

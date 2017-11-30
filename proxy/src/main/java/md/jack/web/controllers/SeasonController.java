@@ -5,6 +5,7 @@ import md.jack.dto.Dto;
 import md.jack.dto.SeasonDto;
 import md.jack.resouce.SeasonResource;
 import md.jack.service.SeasonService;
+import md.jack.validation.Put;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -65,7 +66,7 @@ public class SeasonController extends AbstractController
 
     @PutMapping
     public ResponseEntity<SeasonResource> addSeason(@PathVariable final Integer serialId,
-                                                    @RequestBody @Validated final SeasonDto season) throws GenericException
+                                                    @RequestBody @Validated(Put.class) final SeasonDto season) throws GenericException
     {
         final SeasonDto seasonDto = seasonService.addSeason(serialId, season);
 
