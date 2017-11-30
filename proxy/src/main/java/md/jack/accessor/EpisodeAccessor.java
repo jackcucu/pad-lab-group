@@ -33,10 +33,10 @@ public interface EpisodeAccessor
                            @RequestBody @Validated EpisodeDto episode);
 
     @PatchMapping(value = "/{serialId}/season/{seasonId}/episode/{id}")
-    ApiResponse addEpisode(@PathVariable("serialId") Integer serialId,
-                           @PathVariable("seasonId") Integer seasonId,
-                           @PathVariable("id") Integer id,
-                           @RequestBody @Validated EpisodeDto episode);
+    ApiResponse updateEpisode(@PathVariable("serialId") Integer serialId,
+                              @PathVariable("seasonId") Integer seasonId,
+                              @PathVariable("id") Integer id,
+                              @RequestBody @Validated EpisodeDto episode);
 
     @PostMapping(value = "/{serialId}/season/{seasonId}/episode/{id}")
     ApiResponse delete(@PathVariable("serialId") Integer serialId,

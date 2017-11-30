@@ -13,7 +13,7 @@ public interface SeasonService
 
     SeasonDto addSeason(Integer serialId, SeasonDto serialDto) throws GenericException;
 
-    SeasonDto updateSeason(Integer serialId, Integer id, SeasonDto serialDto) throws GenericException;
+    SeasonDto updateSeason(Integer serialId, Integer id, SeasonDto seasonDto) throws GenericException;
 
     void deleteSeason(Integer serialId, Integer id) throws GenericException;
 }

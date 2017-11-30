@@ -7,6 +7,7 @@ import md.jack.dto.SerialDto;
 import md.jack.service.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,10 +48,13 @@ public class SerialServiceImpl implements SerialService
         return getSerialDto(response);
     }
 
+    @CachePut(value = "serial", key = "#id")
     @Override
     public SerialDto updateSerial(final Integer id, final SerialDto serialDto) throws GenericException
     {
-        return null;
+        final Dto response = getResponse(serialAccessor.updateSerial(id, serialDto));
+
+        return getSerialDto(response);
     }
 
     @CacheEvict(value = "serial", key = "#id")
