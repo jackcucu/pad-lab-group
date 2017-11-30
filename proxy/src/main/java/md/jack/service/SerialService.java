@@ -13,5 +13,7 @@ public interface SerialService
 
     SerialDto addSerial(SerialDto serialDto) throws GenericException;
 
+    SerialDto updateSerial(Integer id, SerialDto serialDto) throws GenericException;
+
     void deleteSerial(Integer id) throws GenericException;
 }

@@ -47,6 +47,12 @@ public class SerialServiceImpl implements SerialService
         return getSerialDto(response);
     }
 
+    @Override
+    public SerialDto updateSerial(final Integer id, final SerialDto serialDto) throws GenericException
+    {
+        return null;
+    }
+
     @CacheEvict(value = "serial", key = "#id")
     @Override
     public void deleteSerial(final Integer id) throws GenericException

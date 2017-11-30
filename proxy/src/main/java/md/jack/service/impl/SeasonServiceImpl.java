@@ -47,6 +47,12 @@ public class SeasonServiceImpl implements SeasonService
         return getSeasonDto(response);
     }
 
+    @Override
+    public SeasonDto updateSeason(final Integer serialId, final Integer id, final SeasonDto serialDto) throws GenericException
+    {
+        return null;
+    }
+
     @CacheEvict(value = "season", key = "#serialId + #id")
     @Override
     public void deleteSeason(final Integer serialId, final Integer id) throws GenericException

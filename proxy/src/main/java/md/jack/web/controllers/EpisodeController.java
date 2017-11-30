@@ -15,8 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,7 +66,7 @@ public class EpisodeController extends AbstractController
                 new PageMetadata(all.getSize(), all.getNumber(), all.getTotalElements()));
     }
 
-    @PostMapping(value = "/add")
+    @PutMapping
     public ResponseEntity<EpisodeResource> addEpisode(@PathVariable final Integer serialId,
                                                       @PathVariable final Integer seasonId,
                                                       @RequestBody @Validated final EpisodeDto episode) throws GenericException
@@ -80,7 +81,23 @@ public class EpisodeController extends AbstractController
         return ResponseEntity.created(uri).body(new EpisodeResource(episodeDto));
     }
 
-    @DeleteMapping(value = "/delete")
+    @PatchMapping("/{id}")
+    public ResponseEntity<EpisodeResource> updateEpisode(@PathVariable final Integer serialId,
+                                                         @PathVariable final Integer seasonId,
+                                                         @PathVariable final Integer id,
+                                                         @RequestBody @Validated final EpisodeDto episode) throws GenericException
+    {
+        final EpisodeDto episodeDto = episodeService.updateEpisode(serialId, seasonId, id, episode);
+
+        final URI uri = MvcUriComponentsBuilder.fromController(getClass())
+                .path("")
+                .buildAndExpand(serialId, seasonId, episodeDto.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(new EpisodeResource(episodeDto));
+    }
+
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable final Integer serialId,
                                     @PathVariable final Integer seasonId,
                                     @PathVariable final Integer id) throws GenericException
