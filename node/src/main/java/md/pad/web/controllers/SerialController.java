@@ -13,8 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,7 +54,7 @@ public class SerialController
         return new ApiResponse(serialDto);
     }
 
-    @PostMapping(value = "/add")
+    @PutMapping
     public ApiResponse addSerial(@RequestBody @Validated final Serial serial)
     {
         serialService.add(serial);
@@ -61,7 +62,16 @@ public class SerialController
         return new ApiResponse(serial);
     }
 
-    @DeleteMapping(value = "/{id}/delete")
+    @PatchMapping("/{id}")
+    public ApiResponse updateSerial(@PathVariable final Integer id,
+                                    @RequestBody @Validated final Serial serial)
+    {
+        serialService.add(serial);
+
+        return new ApiResponse(serial);
+    }
+
+    @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable final Integer id) throws SerialException
     {
         final Serial serial = serialService.getById(id)

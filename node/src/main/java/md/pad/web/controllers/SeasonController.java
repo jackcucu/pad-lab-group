@@ -15,8 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,9 +63,9 @@ public class SeasonController
         return new ApiResponse(seasonDto);
     }
 
-    @PostMapping(value = "/add")
+    @PutMapping
     public ApiResponse addSeason(@PathVariable final Integer serialId,
-                            @RequestBody @Validated final Season season) throws Exception
+                                 @RequestBody @Validated final Season season) throws Exception
     {
         final Serial serial = serialService.getById(serialId)
                 .orElseThrow(() -> new SerialException("Serial Not Found"));
@@ -76,7 +77,22 @@ public class SeasonController
         return new ApiResponse(season);
     }
 
-    @DeleteMapping(value = "/delete")
+    @PatchMapping("/{id}")
+    public ApiResponse addSeason(@PathVariable final Integer serialId,
+                                 @PathVariable final Integer id,
+                                 @RequestBody @Validated final Season season) throws Exception
+    {
+        final Serial serial = serialService.getById(serialId)
+                .orElseThrow(() -> new SerialException("Serial Not Found"));
+
+        season.setSerial(serial);
+
+        seasonService.add(season);
+
+        return new ApiResponse(season);
+    }
+
+    @DeleteMapping
     public void delete(@PathVariable final Integer serialId,
                        @PathVariable final Integer id) throws SerialException
     {
