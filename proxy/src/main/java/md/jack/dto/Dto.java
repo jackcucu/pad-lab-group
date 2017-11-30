@@ -22,7 +22,7 @@ public class Dto implements Serializable
 
     private Integer seasonNumber;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date releaseDate;
 
     private SerialDto serial;

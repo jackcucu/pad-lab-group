@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import md.jack.validation.Put;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -17,7 +18,7 @@ public class SerialDto implements Serializable
 {
     private Integer id;
 
-    @NotEmpty
-    @NotNull
+    @NotEmpty(groups = Put.class)
+    @NotNull(groups = Put.class)
     private String name;
 }
