@@ -12,13 +12,17 @@ public final class ResponseUtil
 
     public static Dto getResponse(final ApiResponse apiResponse) throws GenericException
     {
-        if (apiResponse.isStatus())
+        if (apiResponse != null)
         {
-            return apiResponse.getResult();
+            if (apiResponse.isStatus())
+            {
+                return apiResponse.getResult();
+            }
+            else
+            {
+                throw new GenericException(apiResponse.getMessage());
+            }
         }
-        else
-        {
-            throw new GenericException(apiResponse.getMessage());
-        }
+        return null;
     }
 }
