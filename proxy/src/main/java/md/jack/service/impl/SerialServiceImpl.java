@@ -29,7 +29,6 @@ public class SerialServiceImpl implements SerialService
         return getSerialDto(response);
     }
 
-    @Cacheable(value = "serials", key = "#pageable.pageNumber + #pageable.pageSize")
     @Override
     public Dto getSerials(final String search, final Pageable pageable) throws GenericException
     {

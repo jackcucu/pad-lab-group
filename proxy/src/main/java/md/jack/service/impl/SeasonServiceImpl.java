@@ -29,7 +29,6 @@ public class SeasonServiceImpl implements SeasonService
         return getSeasonDto(response);
     }
 
-    @Cacheable(value = "seasons", key = "#serialId + #pageable.pageNumber + #pageable.pageSize")
     @Override
     public Dto getSeasons(final Integer serialId, final String search, final Pageable pageable) throws GenericException
     {

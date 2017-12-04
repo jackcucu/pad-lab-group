@@ -29,8 +29,6 @@ public class EpisodeServiceImpl implements EpisodeService
         return getEpisodeDto(response);
     }
 
-
-    @Cacheable(value = "episodes", key = "#serialId + #seasonId + #pageable.pageNumber + #pageable.pageSize")
     @Override
     public Dto getEpisodes(final Integer serialId, final Integer seasonId, final String search, final Pageable pageable) throws GenericException
     {
@@ -51,6 +49,7 @@ public class EpisodeServiceImpl implements EpisodeService
     }
 
     @CachePut(value = "episode", key = "#serialId + #seasonId + #id")
+    @CacheEvict
     @Override
     public EpisodeDto updateEpisode(final Integer serialId, final Integer seasonId, final Integer id, final EpisodeDto episodeDto) throws GenericException
     {
