@@ -49,7 +49,7 @@ public class EpisodeController
 
         seasonService.getSeasonForSerial(serialId, seasonId).orElseThrow(() -> new SerialException("Season not found"));
 
-        return episodeService.getEpisodeForSeason(seasonId, id)
+        return episodeService.getEpisodeForSeason(serialId, seasonId, id)
                 .map(ApiResponse::new)
                 .orElseThrow(() -> new SerialException("Episode not found"));
     }
@@ -64,7 +64,7 @@ public class EpisodeController
 
         seasonService.getSeasonForSerial(serialId, seasonId).orElseThrow(() -> new SerialException("Season not found"));
 
-        final Page<Episode> all = episodeService.getEpisodesForSeason(seasonId, search, page);
+        final Page<Episode> all = episodeService.getEpisodesForSeason(serialId, seasonId, search, page);
 
         final List<Episode> content = all.getContent();
 
@@ -121,7 +121,7 @@ public class EpisodeController
     {
         serialService.getById(serialId).orElseThrow(() -> new SerialException("Serial not found"));
 
-        episodeService.getEpisodeForSeason(seasonId, id)
+        episodeService.getEpisodeForSeason(serialId, seasonId, id)
                 .orElseThrow(() -> new SerialException("Episode not found"));
 
         episodeService.delete(id);
