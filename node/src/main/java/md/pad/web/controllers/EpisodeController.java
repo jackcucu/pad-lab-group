@@ -64,7 +64,7 @@ public class EpisodeController
 
         seasonService.getSeasonForSerial(serialId, seasonId).orElseThrow(() -> new SerialException("Season not found"));
 
-        final Page<Episode> all = episodeService.getAll(search, page);
+        final Page<Episode> all = episodeService.getEpisodesForSeason(seasonId, search, page);
 
         final List<Episode> content = all.getContent();
 

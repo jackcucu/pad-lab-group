@@ -19,17 +19,18 @@ public class EpisodeServiceImpl extends EntityServiceImpl<Episode, EpisodeReposi
         implements EpisodeService
 {
     @Override
-    public Optional<Episode> getEpisodeForSeason(final Integer seasonId, final Integer episodeId)
+    public Optional<Episode> getEpisodeForSeason(final Integer serialId, final Integer seasonId, final Integer episodeId)
     {
-        return repository.findBySeason_IdAndId(seasonId, episodeId);
+        return repository.findBySeason_Serial_IdAndSeason_IdAndId(serialId, seasonId, episodeId);
     }
 
     @Override
-    public Page<Episode> getEpisodesForSeason(final Integer seasonId, final String query, final Pageable pageable)
+    public Page<Episode> getEpisodesForSeason(final Integer serialId, final Integer seasonId, final String query, final Pageable pageable)
     {
         final long count = getAll().stream().filter(it -> it.getSeason().getId().equals(seasonId)).count();
 
         final List<Episode> collect = getAll(query, pageable).getContent().stream()
+                .filter(it -> it.getSeason().getSerial().getId().equals(serialId))
                 .filter(it -> it.getSeason().getId().equals(seasonId))
                 .collect(toList());
 

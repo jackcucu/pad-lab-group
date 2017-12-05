@@ -53,7 +53,7 @@ public class SeasonController
     {
         serialService.getById(serialId).orElseThrow(() -> new SerialException("Serial not found"));
 
-        final Page<Season> all = seasonService.getAll(search, page);
+        final Page<Season> all = seasonService.getSeasonsForSerial(serialId, search, page);
 
         final List<Season> content = all.getContent();
 

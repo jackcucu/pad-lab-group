@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface EpisodeRepository extends JpaRepository<Episode, Integer>, JpaSpecificationExecutor<Episode>
 {
-    Optional<Episode> findBySeason_IdAndId(Integer seasonId, Integer id);
+    Optional<Episode> findBySeason_Serial_IdAndSeason_IdAndId(Integer serialId, Integer seasonId, Integer id);
 }

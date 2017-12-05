@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface EpisodeService extends EntityService<Episode>
 {
-    Optional<Episode> getEpisodeForSeason(Integer seasonId, Integer episodeId);
+    Optional<Episode> getEpisodeForSeason(Integer serialId, Integer seasonId, Integer episodeId);
 
-    Page<Episode> getEpisodesForSeason(Integer seasonId, String query, Pageable pageable);
+    Page<Episode> getEpisodesForSeason(Integer serialId, Integer seasonId, String query, Pageable pageable);
 }
