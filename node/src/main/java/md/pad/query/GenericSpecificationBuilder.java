@@ -14,7 +14,7 @@ public class GenericSpecificationBuilder<T>
 
     public GenericSpecificationBuilder (final String query)
     {
-        final Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        final Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(.*),");
 
         final Matcher matcher = pattern.matcher(query + ",");
 
