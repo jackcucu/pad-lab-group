@@ -20,7 +20,7 @@
             <a href ng-click="changePage(serial._links.seasons.href, serial.serial.name)">
                 {{serial.serial.name}}</a>
             <br>
-            <button ng-click="updateSerial()">Update</button>
+            <button ng-click="updateSerial(serial._links.self.href, serial.serial.name)">Update</button>
             <button ng-click="deleteSerial(serial._links.self.href)">Delete</button>
         </div>
 
@@ -29,7 +29,7 @@
             <a href ng-click="changePage(season._links.episodes.href, season.season.serial.name)">
                 Season {{season.season.seasonNumber}}</a>
             <br><i>{{season.season.description}}</i>
-            <button ng-click="updateSerial()">Update</button>
+            <button ng-click="updateSerial(season._links.self.href, season.season.description)">Update</button>
             <button ng-click="deleteSerial(season._links.self.href)">Delete</button>
         </div>
 
@@ -37,7 +37,7 @@
         <div ng-repeat="episode in container._embedded.episodeResourceList">
             {{episode.episode.ord}} {{episode.episode.name}}<br>
             <i>{{episode.episode.description}}</i>
-            <button ng-click="updateSerial()">Update</button>
+            <button ng-click="updateSerial(episode._links.self.href, episode.episode.name)">Update</button>
             <button ng-click="deleteSerial(episode._links.self.href)">Delete</button>
         </div>
 

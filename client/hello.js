@@ -31,6 +31,7 @@ angular.module('pad', [])
                 $scope.container = response.data;
                 $scope.currentPage1 = Number($scope.container.page.number) + Number(1);
                 $scope.totalPages = Number($scope.container.page.totalPages);
+                console.log('Total pages: ' + $scope.totalPages)
             });
         };
         $scope.get(null);
@@ -60,8 +61,11 @@ angular.module('pad', [])
             })
         };
 
-        $scope.getByPage = function () {
-            $http.get("http://165.227.232.6:1212/api/serial", {
+        $scope.getByPage = function (path) {
+            if(path == null){
+                path = "http://165.227.232.6:1212/api/serial"
+            }
+            $http.get(path, {
                 headers: {
                     "API-KEY": "1",
                     "Access-Control-Allow-Origin": "*",
@@ -72,8 +76,8 @@ angular.module('pad', [])
                     'page': Number($scope.currentPage1) - Number(1)
                 }
             }).then(function (response) {
-
                 $scope.container = response.data;
+
             })
         };
 
@@ -90,7 +94,7 @@ angular.module('pad', [])
                 $scope.container = response.data;
                 resetVariables();
                 $scope.title = title;
-                // $scope.container._embedded.seasonResourceList[0].season.serial.name
+                $scope.totalPages = Number($scope.container.page.totalPages);
             })
         };
 
@@ -157,6 +161,8 @@ angular.module('pad', [])
                 if ($scope.status > 199 && $scope.status < 300) {
                     $scope.getByPage();
                 }
+            }, function failedCallBack($response) {
+                alert($response.status + " " + $response.statusText)
             })
         };
 
@@ -164,7 +170,7 @@ angular.module('pad', [])
             $scope.getBySeason(path, title);
         };
 
-        function resetVariables (){
+        function resetVariables() {
             $scope.queryString = '';
             $scope.addString = '';
             $scope.currentPage1 = 1;
@@ -172,8 +178,24 @@ angular.module('pad', [])
             $scope.title = '';
 
         }
-        $scope.updateSerial = function () {
-            alert('Feature coming soon!')
+
+        $scope.updateSerial = function (path, initialText) {
+            modifiedText = prompt("Modify the name:", initialText);
+
+            console.log(path);
+            console.log(modifiedText);
+            $http.patch(path, '{"name": "' + modifiedText + '"}', {
+                headers: {
+                    "API-KEY": "1",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                "Content-Type": "application/json",
+                "Accept": "application/hal+json"
+            }).then(function ($response) {
+                alert($response.status);
+                $scope.getByPage(null);
+            })
+
         }
 
-    });
+});
