@@ -17,7 +17,9 @@ angular.module('pad', [])
 
         $scope.get = function (path) {
             if (path == null) {
-                path = 'http://165.227.232.6:1212/api/serial'
+                path = 'http://165.227.232.6:1212/api/serial';
+                resetVariables();
+                $scope.currentPage1 = 0;
             }
             $http.get(path, {
                 headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*"},
@@ -34,6 +36,7 @@ angular.module('pad', [])
         $scope.get(null);
 
         $scope.getSearch = function () {
+            $scope.title = '';
             $http.get('http://165.227.232.6:1212/api/serial', {
                 headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*"},
                 params: {
@@ -74,7 +77,7 @@ angular.module('pad', [])
             })
         };
 
-        $scope.getBySeason = function (path) {
+        $scope.getBySeason = function (path, title) {
             path = path.replace("?search=", "");
             $http.get(path, {
                 headers: {
@@ -85,10 +88,9 @@ angular.module('pad', [])
                 }
             }).then(function (response) {
                 $scope.container = response.data;
-                $scope.queryString = '';
-                $scope.addString = '';
-                $scope.currentPage1 = 1;
-                $scope.totalPages = 0;
+                resetVariables();
+                $scope.title = title;
+                // $scope.container._embedded.seasonResourceList[0].season.serial.name
             })
         };
 
@@ -158,9 +160,20 @@ angular.module('pad', [])
             })
         };
 
-        $scope.changePage = function (path) {
-            console.log(path)
-            $scope.getBySeason(path);
+        $scope.changePage = function (path, title) {
+            $scope.getBySeason(path, title);
         };
+
+        function resetVariables (){
+            $scope.queryString = '';
+            $scope.addString = '';
+            $scope.currentPage1 = 1;
+            $scope.totalPages = 0;
+            $scope.title = '';
+
+        }
+        $scope.updateSerial = function () {
+            alert('Feature coming soon!')
+        }
 
     });
