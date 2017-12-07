@@ -1,0 +1,2 @@
+[jes]
+jes1 ansible_ssh_host=165.227.232.6 ansible_ssh_port=22 ansible_ssh_user=notroot

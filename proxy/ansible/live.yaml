@@ -1,0 +1,66 @@
+- name: Pull changes, make build
+  hosts: 127.0.0.1
+  connection: local
+  vars:
+     service_name: proxy
+
+  tasks:
+    - name: Update repository
+      git:
+        repo: git@github.com:jackcucu/pad-lab-group.git
+        dest: "repo"
+        version: develop
+        key_file: ~/.ssh/id_rsa
+        accept_hostkey: yes
+        update: yes
+
+    - name: Build package
+      command: mvn -f repo/{{service_name}}/pom.xml clean package
+
+- name: Deploy to remote server
+  hosts: jes
+  become: yes
+  become_method: sudo
+  vars:
+    service_name: proxy
+  tasks:
+    - name: Check that {{service_name}} folder exists
+      stat:
+        path: /opt/{{service_name}}
+      register: folder
+
+    - name: Create {{service_name}} folder
+      file: path=/opt/{{service_name}} state=directory
+      when: folder.stat.exists == False
+
+    - name: Upload jar to server
+      copy: src=repo/{{service_name}}/target/{{service_name}}.jar dest=/opt/{{service_name}}
+
+    - name: Make app executable
+      command: chmod +x /opt/{{service_name}}/{{service_name}}.jar
+
+    - name: Check if Service Exists
+      stat: path=/etc/init.d/{{service_name}}
+      register: service_status
+
+    - name: Create link to service
+      command: ln -s /opt/{{service_name}}/{{service_name}}.jar /etc/init.d/{{service_name}}
+      when: service_status.stat.exists == False
+
+    - name: Enable service
+      command: systemctl enable {{service_name}}
+      when: service_status.stat.exists == False
+
+    - name : Start service
+      command: service {{service_name}} restart
+
+    - name : systemctl update
+      command: systemctl daemon-reload
+
+- name: Delete local repository
+  hosts: 127.0.0.1
+  connection: local
+
+  tasks:
+    - name: Delete repository
+      file: path=repo state=absent
