@@ -5,7 +5,6 @@ import md.jack.model.api.ApiResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,7 +31,7 @@ public interface EpisodeAccessor
                            @PathVariable("seasonId") Integer seasonId,
                            @RequestBody @Validated EpisodeDto episode);
 
-    @PatchMapping(value = "/{serialId}/season/{seasonId}/episode/{id}")
+    @PutMapping(value = "/{serialId}/season/{seasonId}/episode/{id}")
     ApiResponse updateEpisode(@PathVariable("serialId") Integer serialId,
                               @PathVariable("seasonId") Integer seasonId,
                               @PathVariable("id") Integer id,

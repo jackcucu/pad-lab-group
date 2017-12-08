@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,7 +78,7 @@ public class SeasonController
         return new ApiResponse(season);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ApiResponse updateSeason(@PathVariable final Integer serialId,
                                     @PathVariable final Integer id,
                                     @RequestBody @Validated final Season season) throws Exception
