@@ -43,7 +43,7 @@ public class Season extends AbstractEntity
     private Serial serial;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "season", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "season", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Episode> episodes;
 }
 

@@ -29,6 +29,6 @@ public class Serial extends AbstractEntity
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "serial", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "serial", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Season> seasons;
 }

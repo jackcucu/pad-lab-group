@@ -13,9 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +27,7 @@ import java.util.List;
 import static md.pad.util.FunctionalUtils.safeSet;
 
 @RestController
-@RequestMapping("/api/serial/{serialId}/season/{seasonId}/episode")
+@RequestMapping("/api/serials/{serialId}/seasons/{seasonId}/episodes")
 public class EpisodeController
 {
     @Autowired
@@ -113,7 +113,7 @@ public class EpisodeController
         return new ApiResponse(episodeLocal);
     }
 
-    @PostMapping
+    @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable final Integer serialId,
                        @PathVariable final Integer seasonId,
                        @PathVariable final Integer id) throws SerialException
