@@ -1,4 +1,5 @@
+[new]
+node1 ansible_ssh_host=165.227.224.213 ansible_ssh_port=22 ansible_ssh_user=root
 [node]
-node1 ansible_ssh_host=46.101.79.220 ansible_ssh_port=22 ansible_ssh_user=root
+node1 ansible_ssh_host=165.227.224.213 ansible_ssh_port=22 ansible_ssh_user=root
 node2 ansible_ssh_host=188.166.151.218 ansible_ssh_port=22 ansible_ssh_user=root
-node3 ansible_ssh_host=188.166.151.198 ansible_ssh_port=22 ansible_ssh_user=root
