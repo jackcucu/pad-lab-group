@@ -1,4 +1,4 @@
-angular.module('pad', [])
+angular.module('pad', ['ngMaterial'])
     .filter('startFrom', function () {
         return function (input, start) {
             start = +start;
@@ -17,12 +17,14 @@ angular.module('pad', [])
 
         $scope.get = function (path) {
             if (path == null) {
-                path = 'http://165.227.232.6:1212/api/serial';
+                path = 'http://165.227.232.6:1212/api/serials';
                 resetVariables();
                 $scope.currentPage1 = 0;
             }
             $http.get(path, {
-                headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*"},
+                headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*",
+                    "Content-Type": "application/json",
+                    "Accept": "application/hal+json"},
                 params: {
                     'page': Number($scope.currentPage1),
                     'search': 'name:' + $scope.queryString
@@ -31,14 +33,14 @@ angular.module('pad', [])
                 $scope.container = response.data;
                 $scope.currentPage1 = Number($scope.container.page.number) + Number(1);
                 $scope.totalPages = Number($scope.container.page.totalPages);
-                console.log('Total pages: ' + $scope.totalPages)
+                console.log('Total pages: ' + $scope.totalPages);
             });
         };
         $scope.get(null);
 
         $scope.getSearch = function () {
             $scope.title = '';
-            $http.get('http://165.227.232.6:1212/api/serial', {
+            $http.get('http://165.227.232.6:1212/api/serials', {
                 headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*"},
                 params: {
                     'page': Number($scope.currentPage1) - Number(1),
@@ -63,7 +65,7 @@ angular.module('pad', [])
 
         $scope.getByPage = function (path) {
             if(path == null){
-                path = "http://165.227.232.6:1212/api/serial"
+                path = "http://165.227.232.6:1212/api/serials"
             }
             $http.get(path, {
                 headers: {
@@ -99,8 +101,11 @@ angular.module('pad', [])
         };
 
 
-        $scope.currentPageDec = function () {
-            $http.get("http://165.227.232.6:1212/api/serial", {
+        $scope.currentPageDec = function (path) {
+            if (path == null){
+                path = "http://165.227.232.6:1212/api/serials";
+            }
+            $http.get(path, {
                 headers: {
                     "API-KEY": "1",
                     "Access-Control-Allow-Origin": "*",
@@ -118,8 +123,7 @@ angular.module('pad', [])
         };
 
         $scope.currentPageInc = function () {
-            console.log($scope.container);
-            $http.get("http://165.227.232.6:1212/api/serial", {
+            $http.get("http://165.227.232.6:1212/api/serials", {
                 headers: {
                     "API-KEY": "1",
                     "Access-Control-Allow-Origin": "*",
@@ -137,7 +141,7 @@ angular.module('pad', [])
         };
 
         $scope.addSerial = function () {
-            $http.put("http://165.227.232.6:1212/api/serial", '{"name": "' + $scope.addString + '"}', {
+            $http.put("http://165.227.232.6:1212/api/serials", '{"name": "' + $scope.addString + '"}', {
                 headers: {
                     "API-KEY": "1",
                     "Access-Control-Allow-Origin": "*"
@@ -181,16 +185,15 @@ angular.module('pad', [])
 
         $scope.updateSerial = function (path, initialText) {
             modifiedText = prompt("Modify the name:", initialText);
-
             console.log(path);
             console.log(modifiedText);
-            $http.patch(path, '{"name": "' + modifiedText + '"}', {
+            $http.patch(path, ' {"description":"' + modifiedText + '"}', {
                 headers: {
                     "API-KEY": "1",
-                    "Access-Control-Allow-Origin": "*"
-                },
-                "Content-Type": "application/json",
-                "Accept": "application/hal+json"
+                    "Access-Control-Allow-Origin": "*",
+                    "Content-Type": "application/json",
+                    "Accept": "application/hal+json"
+                }
             }).then(function ($response) {
                 alert($response.status);
                 $scope.getByPage(null);
