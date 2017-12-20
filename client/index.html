@@ -18,9 +18,9 @@
 
 <body ng-controller="Main" ng-cloak="">
 <md-content flex layout-padding>
-    <md-toolbar md-scroll-shrink ng-if="true" >
+    <md-toolbar md-scroll-shrink ng-if="true">
         <div class="md-toolbar-tools">
-            <h3>  API Consumer </h3>
+            <h3> API Consumer </h3>
         </div>
     </md-toolbar>
 
@@ -33,6 +33,90 @@
         Back
     </md-button>
     <span class="md-headline">{{title}}</span>
+
+    <!-- Hidden input for adding new serial -->
+    <div ng-show="serialID == null && seasonID == null" flex="50">
+        <md-button ng-click="toggle()">
+            Add entry
+        </md-button>
+        <div ng-show="view">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 flex="flex">Please complete the following lines</h2>
+                </div>
+            </md-toolbar>
+            <md-input-container flex="30">
+                <label>Serial name</label>
+                <input required ng-model="addString">
+            </md-input-container>
+            <md-button class="md-raised" ng-click="addEntry()">Add new serial</md-button>
+        </div>
+    </div>
+
+
+    <!-- Hidden input for adding new season -->
+    <div ng-show="serialID != null && seasonID == null" flex="30">
+        <md-button ng-click="toggle()">
+            Add entry
+        </md-button>
+        <div ng-show="view">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 flex="flex">Please complete the following lines</h2>
+                </div>
+            </md-toolbar>
+            <md-content>
+                <md-input-container flex="flex">
+                    <label>Season number</label>
+                    <input type="number" required min="1" max="999" ng-pattern="/^[0-9]+$/"
+                           ng-model="userDefined.season"/>
+                </md-input-container>
+                <md-input-container flex="flex">
+                    <label>Season name</label>
+                    <input required ng-model="userDefined.name"/>
+                </md-input-container>
+                <md-input-container flex="flex">
+                    <label>Description</label>
+                    <textarea required ng-model="userDefined.description" md-maxlength="150"></textarea>
+                </md-input-container>
+                <md-input-container flex="flex">
+                    <input aria-label="date" required type="date" ng-model="userDefined.date"/>
+                </md-input-container>
+            </md-content>
+            <md-button class="md-raised" ng-click="">Add new season</md-button>
+        </div>
+    </div>
+
+    <!-- Hidden input for adding new episode -->
+    <div ng-show="serialID != null && seasonID != null" flex="30">
+        <md-button ng-click="toggle()">
+            Add entry
+        </md-button>
+        <div ng-show="view">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 flex="flex">Please complete the following lines</h2>
+                </div>
+            </md-toolbar>
+            <md-content>
+                <md-input-container flex="flex">
+                    <label>Episode name</label>
+                    <input required ng-model="userDefinedEpisode.name"/>
+                </md-input-container>
+
+                <md-input-container flex="flex">
+                    <label>Episode description</label>
+                    <textarea ng-model="userDefinedEpisode.description" md-maxlength="150"></textarea>
+                </md-input-container>
+                <md-input-container flex="flex">
+                    <label>Episode number</label>
+                    <input type="number" required min="1" max="999" ng-pattern="/^[0-9]+$/"
+                           ng-model="userDefinedEpisode.number"/>
+                </md-input-container>
+            </md-content>
+            <md-button class="md-raised" ng-click="">Add new episode</md-button>
+        </div>
+    </div>
 
 
     <!--ALL SERIALS CONTAINER-->
@@ -96,92 +180,22 @@
         </md-card>
     </section>
 
-    <div ng-show="serialID == null && seasonID == null" flex="30">
-        <md-button ng-click="toggle()">
-            Add entry
-        </md-button>
-        <div ng-if="view">
-            <md-toolbar>
-                <div class="md-toolbar-tools">
-                    <h2 flex="flex">Please complete the following lines</h2>
-                </div>
-            </md-toolbar>
-            <md-input-container flex="30">
-                <label>Serial name</label>
-                <input required ng-model="addString">
-            </md-input-container>
-            <md-button class="md-raised" ng-click="addEntry()">Add new serial</md-button>
-        </div>
-    </div>
 
 
-    <div ng-show="serialID != null && seasonID == null" flex="30">
-        <md-button ng-click="toggle()">
-            Add entry
-        </md-button>
-        <div ng-if="view">
-            <md-toolbar>
-                <div class="md-toolbar-tools">
-                    <h2 flex="flex">Please complete the following lines</h2>
-                </div>
-            </md-toolbar>
-            <md-content>
-                <md-input-container flex="flex">
-                    <label>Season number</label>
-                    <input  type="number" required min="1" max="999" ng-pattern="/^[0-9]+$/" ng-model="userDefined.season"/>
-                </md-input-container>
-                <md-input-container flex="flex">
-                    <label>Season name</label>
-                    <input required ng-model="userDefined.name"/>
-                </md-input-container>
-                <md-input-container flex="flex">
-                    <label>Description</label>
-                    <textarea required ng-model="userDefined.description" md-maxlength="150"></textarea>
-                </md-input-container>
-                <md-input-container flex="flex">
-                    <input required type="date" ng-model="userDefined.date"/>
-                </md-input-container>
-            </md-content>
-            <md-button class="md-raised" ng-click="">Add new season</md-button>
-        </div>
-    </div>
-
-    <div ng-show="serialID != null && seasonID != null" flex="30">
-        <md-button ng-click="toggle()">
-            Add entry
-        </md-button>
-        <div ng-if="view">
-            <md-toolbar>
-                <div class="md-toolbar-tools">
-                    <h2 flex="flex">Please complete the following lines</h2>
-                </div>
-            </md-toolbar>
-            <md-content>
-                <md-input-container flex="flex">
-                    <label>Episode name</label>
-                    <input required ng-model="userDefinedEpisode.name"/>
-                </md-input-container>
-
-                <md-input-container flex="flex">
-                    <label>Episode description</label>
-                    <textarea ng-model="userDefinedEpisode.description" md-maxlength="150"></textarea>
-                </md-input-container>
-                <md-input-container flex="flex">
-                    <label>Episode number</label>
-                    <input  type="number" required min="1" max="999" ng-pattern="/^[0-9]+$/" ng-model="userDefinedEpisode.number"/>
-                </md-input-container>
-            </md-content>
-            <md-button class="md-raised" ng-click="">Add new episode</md-button>
-        </div>
-    </div>
-
+    <!-- Pages -->
     <p align="center">
+        <md-button ng-disabled="currentPage1 <= 0" ng-click="getByPage(0)">
+            First
+        </md-button>
         <md-button ng-disabled="currentPage1 <= 0" ng-click="currentPageDec()">
             Previous
         </md-button>
-        {{currentPage1 + 1}}
+        {{currentPage1 + 1}} / {{totalPages}}
         <md-button ng-disabled="currentPage1 >= totalPages-1 " ng-click="currentPageInc()">
             Next
+        </md-button>
+        <md-button ng-disabled="currentPage1 == totalPages-1 " ng-click="getByPage(totalPages-1)">
+            Last
         </md-button>
     </p>
 

@@ -6,19 +6,28 @@ angular.module('pad', ['ngMaterial'])
         }
     })
     .controller('Main', function ($scope, $http, $mdDialog) {
-
+        //Variables used
         $scope.queryString = '';
         $scope.addString = '';
         $scope.currentPage1 = 0;
         $scope.totalPages = 0;
-
         $scope.title = '';
-        var tempTitle;
         $scope.serialID = null;
         $scope.seasonID = null;
+        $scope.userDefined = {
+            season: '',
+            name: '',
+            description: '',
+            date: ''
+        };
 
+        $scope.userDefinedEpisode = {
+            name: '',
+            description: '',
+            number: ''
+        };
         var path = null;
-
+        var tempTitle;
 
 
         $scope.get = function () {
@@ -37,12 +46,13 @@ angular.module('pad', ['ngMaterial'])
                     "Accept": "application/hal+json"},
                 params: {
                     'page': Number($scope.currentPage1),
-                    'search': 'name:' + $scope.queryString
                 }
             }).then(function (response) {
                 $scope.container = response.data;
                 $scope.currentPage1 = Number($scope.container.page.number);
                 $scope.totalPages = Number($scope.container.page.totalPages);
+                console.log('Page ' + $scope.currentPage1);
+                console.log('Total pages ' + $scope.totalPages);
             });
         };
         $scope.get();
@@ -216,6 +226,7 @@ angular.module('pad', ['ngMaterial'])
             } else {
                 path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
             }
+            console.log('Adding serial ' + $scope.addString);
             $http.put(path,'{"name": "' + $scope.addString + '"}', {
                 headers: {"API-KEY": "1",
                     "Access-Control-Allow-Origin": "*",
@@ -224,7 +235,13 @@ angular.module('pad', ['ngMaterial'])
                 }
             }).then(function () {
                 $scope.addString = '';
+                $scope.view = false;
                 $scope.getByPage($scope.currentPage1);
+            }, function failedCallBack($response) {
+                $mdDialog.show($mdDialog.alert()
+                    .textContent($response.status + " " + $response.statusText)
+                    .ok('Got it!')
+                )
             });
 
         };
@@ -348,13 +365,16 @@ angular.module('pad', ['ngMaterial'])
                     $scope.getByPage(null);
                 })
             });
-        }
+        };
 
-        $scope.view = false;
+
+        $scope.view= false;
 
         $scope.toggle = function () {
             $scope.view = !$scope.view;
-        }
+        };
+
+
 
 
 
