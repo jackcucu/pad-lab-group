@@ -35,11 +35,13 @@
 
     <!--ALL SERIALS CONTAINER-->
     <section ng-repeat="serial in container._embedded.serialResourceList">
-        <md-card flex="50">
-            <md-button ng-click="changePage(serial._links.seasons.href, serial.serial.name)">
+        <md-card >
+            <md-content layout-align="start center">
+            <md-button ng-click="changePage(serial._links.seasons.href, serial.serial.name, serial.serial.id, null)">
                 {{serial.serial.name}}
             </md-button>
-            <md-card-actions layout="row" layout-align="center center">
+            </md-content>
+            <md-card-actions layout="row" layout-align="end center">
                 <md-button class="md-raised md-primary"
                            ng-click="updateName(serial._links.self.href, serial.serial.name)">Update
                 </md-button>
@@ -50,18 +52,18 @@
 
     <!--ALL SEASONS CONTAINER-->
     <section ng-repeat="season in container._embedded.seasonResourceList">
-        <md-card flex="50">
-            <md-card-header-text>
-                <md-button ng-click="changePage(season._links.episodes.href, 'Season ' + season.season.seasonNumber)">
-                    <span class="md-headline">Season {{season.season.seasonNumber}}</span>
+        <md-card>
+            <md-card-header-text layout-align="start center">
+                <md-button ng-click="changePage(season._links.episodes.href, 'Season ' + season.season.seasonNumber, season.season.serial.id, season.season.id)">
+                    <span class="md-headline">Season {{season.season.seasonNumber}}: {{season.season.name}}</span>
                 </md-button>
             </md-card-header-text>
             <md-card-content>
                 <i>{{season.season.description}}</i>
             </md-card-content>
-            <md-card-actions layout="row" layout-align="center center">
+            <md-card-actions layout="row" layout-align="end center">
                 <md-button class="md-raised md-primary"
-                           ng-click="updateDescription(season._links.self.href, season.season.description)">Update
+                           ng-click="updateName(season._links.self.href, season.season.name)">Update
                 </md-button>
                 <md-button class="md-raised md-warn" ng-click="deleteSerial(season._links.self.href)">Delete</md-button>
             </md-card-actions>
@@ -70,8 +72,8 @@
 
     <!--ALL EPISODES CONTAINER-->
     <section ng-repeat="episode in container._embedded.episodeResourceList">
-        <md-card flex="50">
-            <md-card-header-text>
+        <md-card>
+            <md-card-header-text layout-align="start center">
                 <md-button>
                     <span class="md-headline">{{episode.episode.ord}} {{episode.episode.name}}</span>
                 </md-button>
@@ -79,7 +81,7 @@
             <md-card-content>
                 <i>{{episode.episode.description}}</i>
             </md-card-content>
-            <md-card-actions layout="row" layout-align="center center">
+            <md-card-actions layout="row" layout-align="end center">
                 <md-button class="md-raised md-primary"
                            ng-click="updateName(episode._links.self.href, episode.episode.name)">Update
                 </md-button>

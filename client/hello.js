@@ -14,6 +14,9 @@ angular.module('pad', ['ngMaterial'])
 
         $scope.title = '';
 
+        $scope.serialID = null;
+        $scope.seasonID = null;
+
 
         $scope.get = function (path) {
             if (path == null) {
@@ -38,14 +41,27 @@ angular.module('pad', ['ngMaterial'])
         $scope.get(null);
 
         $scope.getSearch = function () {
+            var path = null;
+            console.log("serialId " + $scope.serialID );
+            console.log("seasonId " + $scope.seasonID );
+            if($scope.serialID == null && $scope.seasonID == null){
+                path = 'http://165.227.232.6:1212/api/serials';
+            } else if( $scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons' ;
+            } else {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
+            }
             $scope.title = '';
-            $http.get('http://165.227.232.6:1212/api/serials', {
+            $http.get(path, {
                 headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*"},
                 params: {
-                    'page': Number($scope.currentPage1) - Number(1),
+                    'page': 0,
                     'search': 'name:' + encodeURIComponent($scope.queryString)
                 }
             }).then(function (response) {
+                console.log('Link ' + path);
+                console.log('Query ' + $scope.queryString);
+                console.log(response.data);
                 $scope.container = response.data;
                 $scope.totalPages = Number($scope.container.page.totalPages);
                 $scope.currentPage1 = 1;
@@ -153,6 +169,20 @@ angular.module('pad', ['ngMaterial'])
             })
         };
 
+        $scope.addSeason = function (path) {
+            $http.put(path, '{"name": "' + $scope.addString + '"}', {
+                headers: {
+                    "API-KEY": "1",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                "Content-Type": "application/json",
+                "Accept": "application/hal+json"
+            }).then(function () {
+                $scope.addString = '';
+                $scope.getByPage();
+            })
+        };
+
         $scope.deleteSerial = function (self) {
             var confirm = $mdDialog.confirm()
                 .title('Are you sure?')
@@ -181,7 +211,9 @@ angular.module('pad', ['ngMaterial'])
 
         };
 
-        $scope.changePage = function (path, title) {
+        $scope.changePage = function (path, title, seasonID, episodeID) {
+            $scope.serialID = seasonID;
+            $scope.seasonID = episodeID;
             $scope.getBySeason(path, title);
         };
 
@@ -191,7 +223,6 @@ angular.module('pad', ['ngMaterial'])
             $scope.currentPage1 = 1;
             $scope.totalPages = 0;
             $scope.title = '';
-
         }
 
         $scope.updateName = function (path, initialText) {
@@ -219,11 +250,11 @@ angular.module('pad', ['ngMaterial'])
                     $mdDialog.show($mdDialog.alert()
                         .textContent($response.status)
                         .ok('Got it!')
-                    )
+                    );
                     $scope.getByPage(null);
                 })
             });
-        }
+        };
 
         $scope.updateDescription = function (path, initialText) {
 
@@ -256,6 +287,6 @@ angular.module('pad', ['ngMaterial'])
             });
         }
 
-        
+
 
 });
