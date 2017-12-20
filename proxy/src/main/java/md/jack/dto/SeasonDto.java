@@ -33,5 +33,9 @@ public class SeasonDto implements Serializable
     @NotEmpty(groups = Put.class)
     private String description;
 
+    @NotNull(groups = Put.class)
+    @NotEmpty(groups = Put.class)
+    private String name;
+
     private SerialDto serial;
 }

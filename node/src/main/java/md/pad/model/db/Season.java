@@ -38,6 +38,8 @@ public class Season extends AbstractEntity
 
     private String description;
 
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "serial_id")
     private Serial serial;
