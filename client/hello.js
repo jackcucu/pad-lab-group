@@ -15,7 +15,7 @@ angular.module('pad', ['ngMaterial'])
         $scope.serialID = null;
         $scope.seasonID = null;
         $scope.userDefined = {
-            season: '',
+            season: 1,
             name: '',
             description: '',
             date: ''
@@ -31,19 +31,21 @@ angular.module('pad', ['ngMaterial'])
 
 
         $scope.get = function () {
-            if($scope.serialID == null && $scope.seasonID == null){
+            if ($scope.serialID == null && $scope.seasonID == null) {
                 path = 'http://165.227.232.6:1212/api/serials';
                 resetVariables();
                 $scope.currentPage1 = 0;
-            } else if( $scope.seasonID == null) {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons' ;
+            } else if ($scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
             } else {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
             $http.get(path, {
-                headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*",
+                headers: {
+                    "API-KEY": "1", "Access-Control-Allow-Origin": "*",
                     "Content-Type": "application/json",
-                    "Accept": "application/hal+json"},
+                    "Accept": "application/hal+json"
+                },
                 params: {
                     'page': Number($scope.currentPage1),
                 }
@@ -58,7 +60,7 @@ angular.module('pad', ['ngMaterial'])
         $scope.get();
 
         $scope.getBack = function () {
-            if($scope.serialID != null && $scope.seasonID != null){
+            if ($scope.serialID != null && $scope.seasonID != null) {
                 path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
                 $scope.seasonID = null;
                 $scope.title = tempTitle;
@@ -76,9 +78,11 @@ angular.module('pad', ['ngMaterial'])
             $scope.currentPage1 = 0;
 
             $http.get(path, {
-                headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*",
+                headers: {
+                    "API-KEY": "1", "Access-Control-Allow-Origin": "*",
                     "Content-Type": "application/json",
-                    "Accept": "application/hal+json"},
+                    "Accept": "application/hal+json"
+                },
                 params: {
                     'page': Number($scope.currentPage1),
                     'search': 'name:' + $scope.queryString
@@ -92,12 +96,12 @@ angular.module('pad', ['ngMaterial'])
 
         $scope.getSearch = function () {
 
-            if($scope.serialID == null && $scope.seasonID == null){
+            if ($scope.serialID == null && $scope.seasonID == null) {
                 path = 'http://165.227.232.6:1212/api/serials';
-            } else if( $scope.seasonID == null) {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons' ;
+            } else if ($scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
             } else {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
             $http.get(path, {
                 headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*"},
@@ -123,17 +127,19 @@ angular.module('pad', ['ngMaterial'])
         };
 
         $scope.getByPage = function (page) {
-            if($scope.serialID == null && $scope.seasonID == null){
+            if ($scope.serialID == null && $scope.seasonID == null) {
                 path = 'http://165.227.232.6:1212/api/serials';
-            } else if( $scope.seasonID == null) {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons' ;
+            } else if ($scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
             } else {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
             $http.get(path, {
-                headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*",
+                headers: {
+                    "API-KEY": "1", "Access-Control-Allow-Origin": "*",
                     "Content-Type": "application/json",
-                    "Accept": "application/hal+json"},
+                    "Accept": "application/hal+json"
+                },
                 params: {
                     'page': page
                 }
@@ -163,12 +169,12 @@ angular.module('pad', ['ngMaterial'])
 
 
         $scope.currentPageDec = function () {
-            if($scope.serialID == null && $scope.seasonID == null){
+            if ($scope.serialID == null && $scope.seasonID == null) {
                 path = 'http://165.227.232.6:1212/api/serials';
-            } else if( $scope.seasonID == null) {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons' ;
+            } else if ($scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
             } else {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
 
             $scope.queryString = '';
@@ -176,9 +182,11 @@ angular.module('pad', ['ngMaterial'])
             $scope.totalPages = 0;
 
             $http.get(path, {
-                headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*",
+                headers: {
+                    "API-KEY": "1", "Access-Control-Allow-Origin": "*",
                     "Content-Type": "application/json",
-                    "Accept": "application/hal+json"},
+                    "Accept": "application/hal+json"
+                },
                 params: {
                     'page': Number($scope.currentPage1) - 1
                 }
@@ -190,12 +198,12 @@ angular.module('pad', ['ngMaterial'])
         };
 
         $scope.currentPageInc = function () {
-            if($scope.serialID == null && $scope.seasonID == null){
+            if ($scope.serialID == null && $scope.seasonID == null) {
                 path = 'http://165.227.232.6:1212/api/serials';
-            } else if( $scope.seasonID == null) {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons' ;
+            } else if ($scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
             } else {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
 
             $scope.queryString = '';
@@ -203,9 +211,11 @@ angular.module('pad', ['ngMaterial'])
             $scope.totalPages = 0;
 
             $http.get(path, {
-                headers: {"API-KEY": "1", "Access-Control-Allow-Origin": "*",
+                headers: {
+                    "API-KEY": "1", "Access-Control-Allow-Origin": "*",
                     "Content-Type": "application/json",
-                    "Accept": "application/hal+json"},
+                    "Accept": "application/hal+json"
+                },
                 params: {
                     'page': Number($scope.currentPage1) + 1
                 }
@@ -219,16 +229,16 @@ angular.module('pad', ['ngMaterial'])
 
         $scope.addEntry = function () {
 
-            if($scope.serialID == null && $scope.seasonID == null){
+            if ($scope.serialID == null && $scope.seasonID == null) {
                 path = 'http://165.227.232.6:1212/api/serials';
-            } else if( $scope.seasonID == null) {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons' ;
+            } else if ($scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
             } else {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
-            console.log('Adding serial ' + $scope.addString);
-            $http.put(path,'{"name": "' + $scope.addString + '"}', {
-                headers: {"API-KEY": "1",
+            $http.put(path, '{"name": "' + $scope.addString + '"}', {
+                headers: {
+                    "API-KEY": "1",
                     "Access-Control-Allow-Origin": "*",
                     "Content-Type": "application/json",
                     "Accept": "application/hal+json"
@@ -246,14 +256,69 @@ angular.module('pad', ['ngMaterial'])
 
         };
 
-        $scope.addEntrySeason = function(){
-            if($scope.serialID == null && $scope.seasonID == null){
+        $scope.addEntrySeason = function () {
+            if ($scope.serialID == null && $scope.seasonID == null) {
                 path = 'http://165.227.232.6:1212/api/serials';
-            } else if( $scope.seasonID == null) {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons' ;
+            } else if ($scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
             } else {
-                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes' ;
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
+            console.log('User defined ' + $scope.userDefined.date);
+            console.log('Add entry path ' + path);
+            $http.put(path,
+                '{"seasonNumber": "' + $scope.userDefined.season + '",' +
+                '"releaseDate":"' + $scope.userDefined.date + '",' +
+                '"description":"' + $scope.userDefined.description + '",' +
+                '"name":"' + $scope.userDefined.name + '"}', {
+                    headers: {
+                        "API-KEY": "1",
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Type": "application/json",
+                        "Accept": "application/hal+json"
+                    }
+                }).then(function () {
+                $scope.userDefined = null;
+                $scope.view = false;
+                $scope.getByPage($scope.currentPage1);
+            }, function failedCallBack($response) {
+                $mdDialog.show($mdDialog.alert()
+                    .textContent($response.status + " " + $response.statusText)
+                    .ok('Got it!')
+                )
+            });
+        };
+
+        $scope.addEntryEpisode = function () {
+            if ($scope.serialID == null && $scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials';
+            } else if ($scope.seasonID == null) {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons';
+            } else {
+                path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
+            }
+            console.log('User defined ' + $scope.userDefinedEpisode);
+            console.log('Add entry path ' + path);
+            $http.put(path,
+                '{"ord":"' + $scope.userDefinedEpisode.number + '",' +
+                '"description":"' + $scope.userDefinedEpisode.description + '",' +
+                '"name":"' + $scope.userDefinedEpisode.name + '"}', {
+                    headers: {
+                        "API-KEY": "1",
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Type": "application/json",
+                        "Accept": "application/hal+json"
+                    }
+                }).then(function () {
+                $scope.userDefined = null;
+                $scope.view = false;
+                $scope.getByPage($scope.currentPage1);
+            }, function failedCallBack($response) {
+                $mdDialog.show($mdDialog.alert()
+                    .textContent($response.status + " " + $response.statusText)
+                    .ok('Got it!')
+                )
+            });
         };
 
         $scope.deleteSerial = function (self) {
@@ -263,7 +328,7 @@ angular.module('pad', ['ngMaterial'])
                 .ok('Okay')
                 .cancel('Cancel');
 
-            $mdDialog.show(confirm).then(function() {
+            $mdDialog.show(confirm).then(function () {
                 $http.delete(self, {
                     headers: {
                         "API-KEY": "1",
@@ -289,7 +354,7 @@ angular.module('pad', ['ngMaterial'])
             $scope.serialID = seasonID;
             $scope.seasonID = episodeID;
             $scope.get();
-            if ($scope.title === ''){
+            if ($scope.title === '') {
                 tempTitle = title;
             }
             $scope.title = title;
@@ -316,7 +381,7 @@ angular.module('pad', ['ngMaterial'])
                 .ok('Okay')
                 .cancel('Cancel');
 
-            $mdDialog.show(confirm).then(function(modifiedText) {
+            $mdDialog.show(confirm).then(function (modifiedText) {
                 console.log(path);
                 console.log(modifiedText);
                 $http.patch(path, ' {"name":"' + modifiedText + '"}', {
@@ -347,7 +412,7 @@ angular.module('pad', ['ngMaterial'])
                 .ok('Okay')
                 .cancel('Cancel');
 
-            $mdDialog.show(confirm).then(function(modifiedText) {
+            $mdDialog.show(confirm).then(function (modifiedText) {
                 console.log(path);
                 console.log(modifiedText);
                 $http.patch(path, ' {"description":"' + modifiedText + '"}', {
@@ -368,14 +433,11 @@ angular.module('pad', ['ngMaterial'])
         };
 
 
-        $scope.view= false;
+        $scope.view = false;
 
         $scope.toggle = function () {
             $scope.view = !$scope.view;
         };
 
 
-
-
-
-});
+    });

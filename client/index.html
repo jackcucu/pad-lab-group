@@ -80,10 +80,10 @@
                     <textarea required ng-model="userDefined.description" md-maxlength="150"></textarea>
                 </md-input-container>
                 <md-input-container flex="flex">
-                    <input aria-label="date" required type="date" ng-model="userDefined.date"/>
+                    <input type="text" name="input" placeholder="YYYY-MM-DD" required ng-model="userDefined.date"/>
                 </md-input-container>
             </md-content>
-            <md-button class="md-raised" ng-click="">Add new season</md-button>
+            <md-button class="md-raised" ng-click="addEntrySeason()">Add new season</md-button>
         </div>
     </div>
 
@@ -114,7 +114,7 @@
                            ng-model="userDefinedEpisode.number"/>
                 </md-input-container>
             </md-content>
-            <md-button class="md-raised" ng-click="">Add new episode</md-button>
+            <md-button class="md-raised" ng-click="addEntryEpisode()">Add new episode</md-button>
         </div>
     </div>
 
@@ -179,7 +179,6 @@
             </md-card-actions>
         </md-card>
     </section>
-
 
 
     <!-- Pages -->
