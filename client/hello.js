@@ -264,8 +264,7 @@ angular.module('pad', ['ngMaterial'])
             } else {
                 path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
-            console.log('User defined ' + $scope.userDefined.date);
-            console.log('Add entry path ' + path);
+
             $http.put(path,
                 '{"seasonNumber": "' + $scope.userDefined.season + '",' +
                 '"releaseDate":"' + $scope.userDefined.date + '",' +
@@ -297,8 +296,7 @@ angular.module('pad', ['ngMaterial'])
             } else {
                 path = 'http://165.227.232.6:1212/api/serials/' + $scope.serialID + '/seasons/' + $scope.seasonID + '/episodes';
             }
-            console.log('User defined ' + $scope.userDefinedEpisode);
-            console.log('Add entry path ' + path);
+
             $http.put(path,
                 '{"ord":"' + $scope.userDefinedEpisode.number + '",' +
                 '"description":"' + $scope.userDefinedEpisode.description + '",' +
@@ -310,7 +308,7 @@ angular.module('pad', ['ngMaterial'])
                         "Accept": "application/hal+json"
                     }
                 }).then(function () {
-                $scope.userDefined = null;
+                $scope.userDefinedEpisode = null;
                 $scope.view = false;
                 $scope.getByPage($scope.currentPage1);
             }, function failedCallBack($response) {
