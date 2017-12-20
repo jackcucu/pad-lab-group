@@ -29,7 +29,7 @@ public class EpisodeServiceImpl extends EntityServiceImpl<Episode, EpisodeReposi
     {
         final long count = getAll().stream().filter(it -> it.getSeason().getId().equals(seasonId)).count();
 
-        final List<Episode> collect = getAll(pageable).getContent().stream()
+        final List<Episode> collect = getAll(query).stream()
                 .filter(it -> it.getSeason().getSerial().getId().equals(serialId))
                 .filter(it -> it.getSeason().getId().equals(seasonId))
                 .collect(toList());

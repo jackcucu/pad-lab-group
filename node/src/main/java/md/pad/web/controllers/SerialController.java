@@ -43,7 +43,7 @@ public class SerialController
     public ApiResponse getAll(@RequestParam(required = false) final String search,
                               @PageableDefault final Pageable page)
     {
-        final Page<Serial> all = serialService.getAll(page);
+        final Page<Serial> all = serialService.getAll(search, page);
 
         final List<Serial> content = all.getContent();
 

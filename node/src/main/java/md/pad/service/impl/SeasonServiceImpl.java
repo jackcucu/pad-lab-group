@@ -29,7 +29,7 @@ public class SeasonServiceImpl extends EntityServiceImpl<Season, SeasonRepositor
     {
         final long count = getAll().stream().filter(it -> it.getSerial().getId().equals(serialId)).count();
 
-        final List<Season> collect = getAll(pageable).getContent().stream()
+        final List<Season> collect = getAll(query).stream()
                 .filter(it -> it.getSerial().getId().equals(serialId))
                 .collect(toList());
 
