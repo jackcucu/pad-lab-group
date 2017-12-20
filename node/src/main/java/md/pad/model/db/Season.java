@@ -29,7 +29,7 @@ import java.util.List;
 @Data
 public class Season extends AbstractEntity
 {
-    @Column(unique = true, name = "season_number")
+    @Column(name = "season_number")
     private Integer seasonNumber;
 
     @Column(name = "release_date")
