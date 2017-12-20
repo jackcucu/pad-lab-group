@@ -2,7 +2,8 @@
 <html ng-app="pad">
 <head>
     <title>API Consumer</title>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.css">
+    <link rel="stylesheet"
+          href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
     <!-- Angular Material requires Angular.js Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
@@ -16,72 +17,96 @@
 </head>
 
 <body ng-controller="Main" ng-cloak="">
-    <md-content>
-    <li>
-        <md-input-container flex="30">
-            <label>Search</label>
-            <input  ng-disabled="queryStringNeeded" ng-keyup="getSearch()" ng-model="queryString">
-        </md-input-container>
-        <h1><a href ng-click="get(null)">{{title}}</a> </h1>
-
-        <!--ALL SERIALS CONTAINER-->
-        <section  ng-repeat="serial in container._embedded.serialResourceList">
-            <md-card flex="50">
-                        <md-button ng-click="changePage(serial._links.seasons.href, serial.serial.name)">
-                            {{serial.serial.name}}
-                        </md-button>
-                <md-card-actions layout="row" layout-align="center center">
-                    <md-button class="md-raised md-primary" ng-click="updateSerial(serial._links.self.href, serial.serial.name)">Update</md-button>
-                    <md-button class="md-raised md-warn" ng-click="deleteSerial(serial._links.self.href)">Delete</md-button>
-                </md-card-actions>
-            </md-card>
-        </section>
-
-        <!--ALL SEASONS CONTAINER-->
-        <section ng-repeat="season in container._embedded.seasonResourceList">
-            <md-card flex="50">
-                <md-card-header-text>
-                    <md-button ng-click="changePage(season._links.episodes.href, season.season.serial.name)">
-                        <span class="md-headline">Season {{season.season.seasonNumber}}</span>
-                    </md-button>
-                </md-card-header-text>
-                <md-card-content>
-                    <i>{{season.season.description}}</i>
-                </md-card-content>
-                <md-card-actions layout="row" layout-align="center center">
-                    <md-button class="md-raised md-primary" ng-click="updateSerial(season._links.self.href, season.season.description)">Update</md-button>
-                    <md-button class="md-raised md-warn" ng-click="deleteSerial(season._links.self.href)">Delete</md-button>
-                </md-card-actions>
-            </md-card>
-        </section>
-
-        <!--ALL EPISODES CONTAINER-->
-        <div ng-repeat="episode in container._embedded.episodeResourceList">
-            {{episode.episode.ord}} {{episode.episode.name}}<br>
-            <i>{{episode.episode.description}}</i>
-            <md-button ng-click="updateSerial(episode._links.self.href, episode.episode.name)">Update</md-button>
-            <md-button ng-click="deleteSerial(episode._links.self.href)">Delete</md-button>
+<md-content flex layout-padding>
+    <md-toolbar md-scroll-shrink ng-if="true">
+        <div class="md-toolbar-tools">
+            <h3>API Consumer </h3>
         </div>
+    </md-toolbar>
 
-        <md-input-container flex="30">
-            <label>Add new entry</label>
-            <input ng-model="addString">
-        </md-input-container>
+    <md-input-container flex="50">
+        <label>Search</label>
+        <input ng-disabled="queryStringNeeded" ng-keyup="getSearch()" ng-model="queryString">
+    </md-input-container>
 
-        <md-button ng-click="addSerial()" >Add Serial</md-button>
+    <md-button ng-click="get(null)">
+        <span class="md-headline">{{title}}</span>
+    </md-button>
 
-        <p>
-            <md-button ng-disabled="currentPage1 <= 1" ng-click="currentPageDec()">
-                Previous
+    <!--ALL SERIALS CONTAINER-->
+    <section ng-repeat="serial in container._embedded.serialResourceList">
+        <md-card flex="50">
+            <md-button ng-click="changePage(serial._links.seasons.href, serial.serial.name)">
+                {{serial.serial.name}}
             </md-button>
-            {{currentPage1}}
-            <md-button ng-disabled="currentPage1 >= totalPages" ng-click="currentPageInc()">
-                Next
-            </md-button>
-        </p>
+            <md-card-actions layout="row" layout-align="center center">
+                <md-button class="md-raised md-primary"
+                           ng-click="updateName(serial._links.self.href, serial.serial.name)">Update
+                </md-button>
+                <md-button class="md-raised md-warn" ng-click="deleteSerial(serial._links.self.href)">Delete</md-button>
+            </md-card-actions>
+        </md-card>
+    </section>
 
-    </li>
-    </md-content>
+    <!--ALL SEASONS CONTAINER-->
+    <section ng-repeat="season in container._embedded.seasonResourceList">
+        <md-card flex="50">
+            <md-card-header-text>
+                <md-button ng-click="changePage(season._links.episodes.href, 'Season ' + season.season.seasonNumber)">
+                    <span class="md-headline">Season {{season.season.seasonNumber}}</span>
+                </md-button>
+            </md-card-header-text>
+            <md-card-content>
+                <i>{{season.season.description}}</i>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="center center">
+                <md-button class="md-raised md-primary"
+                           ng-click="updateDescription(season._links.self.href, season.season.description)">Update
+                </md-button>
+                <md-button class="md-raised md-warn" ng-click="deleteSerial(season._links.self.href)">Delete</md-button>
+            </md-card-actions>
+        </md-card>
+    </section>
+
+    <!--ALL EPISODES CONTAINER-->
+    <section ng-repeat="episode in container._embedded.episodeResourceList">
+        <md-card flex="50">
+            <md-card-header-text>
+                <md-button>
+                    <span class="md-headline">{{episode.episode.ord}} {{episode.episode.name}}</span>
+                </md-button>
+            </md-card-header-text>
+            <md-card-content>
+                <i>{{episode.episode.description}}</i>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="center center">
+                <md-button class="md-raised md-primary"
+                           ng-click="updateName(episode._links.self.href, episode.episode.name)">Update
+                </md-button>
+                <md-button class="md-raised md-warn" ng-click="deleteSerial(episode._links.self.href)">Delete
+                </md-button>
+            </md-card-actions>
+        </md-card>
+    </section>
+
+    <md-input-container flex="30">
+        <label>Add new entry</label>
+        <input ng-model="addString">
+    </md-input-container>
+
+    <md-button class="md-raised" ng-click="addSerial()">Add entry</md-button>
+
+    <p>
+        <md-button ng-disabled="currentPage1 <= 1" ng-click="currentPageDec()">
+            Previous
+        </md-button>
+        {{currentPage1}}
+        <md-button ng-disabled="currentPage1 >= totalPages" ng-click="currentPageInc()">
+            Next
+        </md-button>
+    </p>
+
+</md-content>
 </body>
 </html>
 

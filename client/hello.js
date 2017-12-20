@@ -5,7 +5,7 @@ angular.module('pad', ['ngMaterial'])
             return input.slice(start);
         }
     })
-    .controller('Main', function ($scope, $http) {
+    .controller('Main', function ($scope, $http, $mdDialog) {
 
         $scope.queryString = '';
         $scope.addString = '';
@@ -33,7 +33,6 @@ angular.module('pad', ['ngMaterial'])
                 $scope.container = response.data;
                 $scope.currentPage1 = Number($scope.container.page.number) + Number(1);
                 $scope.totalPages = Number($scope.container.page.totalPages);
-                console.log('Total pages: ' + $scope.totalPages);
             });
         };
         $scope.get(null);
@@ -155,19 +154,31 @@ angular.module('pad', ['ngMaterial'])
         };
 
         $scope.deleteSerial = function (self) {
-            $http.delete(self, {
-                headers: {
-                    "API-KEY": "1",
-                    "Accept": "*/*"
-                }
-            }).then(function successCallBack(response) {
-                $scope.status = response.status;
-                if ($scope.status > 199 && $scope.status < 300) {
-                    $scope.getByPage();
-                }
-            }, function failedCallBack($response) {
-                alert($response.status + " " + $response.statusText)
-            })
+            var confirm = $mdDialog.confirm()
+                .title('Are you sure?')
+                .textContent('Are you really sure that you want to delete this entry?')
+                .ok('Okay')
+                .cancel('Cancel');
+
+            $mdDialog.show(confirm).then(function() {
+                $http.delete(self, {
+                    headers: {
+                        "API-KEY": "1",
+                        "Accept": "*/*"
+                    }
+                }).then(function successCallBack(response) {
+                    $scope.status = response.status;
+                    if ($scope.status > 199 && $scope.status < 300) {
+                        $scope.getByPage();
+                    }
+                }, function failedCallBack($response) {
+                    $mdDialog.show($mdDialog.alert()
+                        .textContent($response.status + " " + $response.statusText)
+                        .ok('Got it!')
+                    )
+                })
+            });
+
         };
 
         $scope.changePage = function (path, title) {
@@ -183,22 +194,68 @@ angular.module('pad', ['ngMaterial'])
 
         }
 
-        $scope.updateSerial = function (path, initialText) {
-            modifiedText = prompt("Modify the name:", initialText);
-            console.log(path);
-            console.log(modifiedText);
-            $http.patch(path, ' {"description":"' + modifiedText + '"}', {
-                headers: {
-                    "API-KEY": "1",
-                    "Access-Control-Allow-Origin": "*",
-                    "Content-Type": "application/json",
-                    "Accept": "application/hal+json"
-                }
-            }).then(function ($response) {
-                alert($response.status);
-                $scope.getByPage(null);
-            })
+        $scope.updateName = function (path, initialText) {
 
+            var confirm = $mdDialog.prompt()
+                .title('Modify entry')
+                .textContent('Please input your modifications for this entry.')
+                .placeholder('Description')
+                .ariaLabel('Description')
+                .initialValue(initialText)
+                .ok('Okay')
+                .cancel('Cancel');
+
+            $mdDialog.show(confirm).then(function(modifiedText) {
+                console.log(path);
+                console.log(modifiedText);
+                $http.patch(path, ' {"name":"' + modifiedText + '"}', {
+                    headers: {
+                        "API-KEY": "1",
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Type": "application/json",
+                        "Accept": "application/hal+json"
+                    }
+                }).then(function ($response) {
+                    $mdDialog.show($mdDialog.alert()
+                        .textContent($response.status)
+                        .ok('Got it!')
+                    )
+                    $scope.getByPage(null);
+                })
+            });
         }
+
+        $scope.updateDescription = function (path, initialText) {
+
+            var confirm = $mdDialog.prompt()
+                .title('Modify entry')
+                .textContent('Please input your modifications for this entry.')
+                .placeholder('Description')
+                .ariaLabel('Description')
+                .initialValue(initialText)
+                .ok('Okay')
+                .cancel('Cancel');
+
+            $mdDialog.show(confirm).then(function(modifiedText) {
+                console.log(path);
+                console.log(modifiedText);
+                $http.patch(path, ' {"description":"' + modifiedText + '"}', {
+                    headers: {
+                        "API-KEY": "1",
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Type": "application/json",
+                        "Accept": "application/hal+json"
+                    }
+                }).then(function ($response) {
+                    $mdDialog.show($mdDialog.alert()
+                        .textContent($response.status + " " + $response.statusText)
+                        .ok('Got it!')
+                    )
+                    $scope.getByPage(null);
+                })
+            });
+        }
+
+        
 
 });
