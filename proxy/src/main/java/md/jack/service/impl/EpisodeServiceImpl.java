@@ -49,7 +49,7 @@ public class EpisodeServiceImpl implements EpisodeService
     }
 
     @CachePut(value = "episode", key = "#serialId + #seasonId + #id")
-    @CacheEvict
+    @CacheEvict(value = "episode", key = "#serialId + #seasonId + #id")
     @Override
     public EpisodeDto updateEpisode(final Integer serialId, final Integer seasonId, final Integer id, final EpisodeDto episodeDto) throws GenericException
     {

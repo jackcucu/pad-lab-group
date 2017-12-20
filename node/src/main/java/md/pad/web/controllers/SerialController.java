@@ -25,7 +25,7 @@ import java.util.List;
 import static md.pad.util.FunctionalUtils.safeSet;
 
 @RestController
-@RequestMapping("/api/serial")
+@RequestMapping("/api/serials")
 public class SerialController
 {
     @Autowired

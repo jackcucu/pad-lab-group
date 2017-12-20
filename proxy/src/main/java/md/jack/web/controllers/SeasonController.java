@@ -29,7 +29,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/serial/{serialId}/season")
+@RequestMapping("api/serials/{serialId}/seasons")
 public class SeasonController extends AbstractController
 {
     @Autowired

@@ -32,7 +32,7 @@ import java.util.List;
 import static org.springframework.hateoas.PagedResources.PageMetadata;
 
 @RestController
-@RequestMapping("/api/serial")
+@RequestMapping("/api/serials")
 public class SerialController extends AbstractController
 {
     @Autowired

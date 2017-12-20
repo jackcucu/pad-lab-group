@@ -38,12 +38,14 @@ public class Season extends AbstractEntity
 
     private String description;
 
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "serial_id")
     private Serial serial;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "season", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "season", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Episode> episodes;
 }
 

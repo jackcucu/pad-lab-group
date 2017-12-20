@@ -11,29 +11,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "node", path = "/api/serial")
+@FeignClient(value = "node", path = "/api/serials")
 public interface SeasonAccessor
 {
-    @GetMapping(value = "/{serialId}/season/{id}")
+    @GetMapping(value = "/{serialId}/seasons/{id}")
     ApiResponse get(@PathVariable("serialId") Integer serialId,
                     @PathVariable("id") Integer id);
 
-    @GetMapping(value = "/{serialId}/season")
+    @GetMapping(value = "/{serialId}/seasons")
     ApiResponse getAll(@PathVariable("serialId") Integer serialId,
                        @RequestParam(value = "search", required = false) String search,
                        @RequestParam(value = "size") int size,
                        @RequestParam(value = "page") int page);
 
-    @PutMapping(value = "/{serialId}/season")
+    @PutMapping(value = "/{serialId}/seasons")
     ApiResponse addSeason(@PathVariable("serialId") Integer serialId,
                           @RequestBody @Validated SeasonDto season);
 
-    @PutMapping(value = "/{serialId}/season/{id}")
+    @PutMapping(value = "/{serialId}/seasons/{id}")
     ApiResponse updateSeason(@PathVariable("serialId") Integer serialId,
                              @PathVariable("id") Integer id,
                              @RequestBody @Validated SeasonDto season);
 
-    @DeleteMapping(value = "/{serialId}/season/{id}")
+    @DeleteMapping(value = "/{serialId}/seasons/{id}")
     ApiResponse delete(@PathVariable("serialId") Integer serialId,
                        @PathVariable("id") Integer id);
 }

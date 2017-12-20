@@ -31,7 +31,7 @@ import java.util.List;
 import static org.springframework.hateoas.PagedResources.PageMetadata;
 
 @RestController
-@RequestMapping("/api/serial/{serialId}/season/{seasonId}/episode")
+@RequestMapping("/api/serials/{serialId}/seasons/{seasonId}/episodes")
 public class EpisodeController extends AbstractController
 {
     @Autowired

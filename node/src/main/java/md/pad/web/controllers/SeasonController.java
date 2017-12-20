@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +27,7 @@ import java.util.List;
 import static md.pad.util.FunctionalUtils.safeSet;
 
 @RestController
-@RequestMapping("api/serial/{serialId}/season")
+@RequestMapping("api/serials/{serialId}/seasons")
 public class SeasonController
 {
     @Autowired
@@ -79,7 +78,7 @@ public class SeasonController
         return new ApiResponse(season);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ApiResponse updateSeason(@PathVariable final Integer serialId,
                                     @PathVariable final Integer id,
                                     @RequestBody @Validated final Season season) throws Exception
@@ -95,13 +94,14 @@ public class SeasonController
         safeSet(seasonLocal::setDescription, season, Season::getDescription);
         safeSet(seasonLocal::setReleaseDate, season, Season::getReleaseDate);
         safeSet(seasonLocal::setSeasonNumber, season, Season::getSeasonNumber);
+        safeSet(seasonLocal::setName, season, Season::getName);
 
         seasonService.edit(seasonLocal);
 
         return new ApiResponse(seasonLocal);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable final Integer serialId,
                        @PathVariable final Integer id) throws SerialException
     {
