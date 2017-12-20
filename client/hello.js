@@ -91,6 +91,7 @@ angular.module('pad', ['ngMaterial'])
                 $scope.container = response.data;
                 $scope.currentPage1 = Number($scope.container.page.number);
                 $scope.totalPages = Number($scope.container.page.totalPages);
+                $scope.view = false;
             });
         };
 
@@ -357,6 +358,7 @@ angular.module('pad', ['ngMaterial'])
             }
             $scope.title = title;
             $scope.totalPages = Number($scope.container.page.totalPages);
+            $scope.view = false;
 
         };
 
