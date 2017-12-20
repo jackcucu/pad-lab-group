@@ -94,6 +94,7 @@ public class SeasonController
         safeSet(seasonLocal::setDescription, season, Season::getDescription);
         safeSet(seasonLocal::setReleaseDate, season, Season::getReleaseDate);
         safeSet(seasonLocal::setSeasonNumber, season, Season::getSeasonNumber);
+        safeSet(seasonLocal::setName, season, Season::getName);
 
         seasonService.edit(seasonLocal);
 

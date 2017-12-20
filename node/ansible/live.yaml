@@ -18,7 +18,7 @@
       command: mvn -f repo/{{service_name}}/pom.xml clean package
 
 - name: Deploy to remote server
-  hosts: new
+  hosts: node
   become: yes
   become_method: sudo
   vars:
